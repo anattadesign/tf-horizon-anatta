@@ -1,0 +1,237 @@
+{% comment %}
+  Section: Generic Section
+
+  Description:
+    A flexible, full-width section container that wraps any theme blocks.
+    Use this as the primary layout wrapper for page content. It provides
+    independent padding and margin controls for desktop and mobile, a
+    configurable content max-width, and a color scheme for background theming.
+
+  Settings:
+    - content_max_width (select): Maximum width of the inner content container.
+        Options: full (no constraint), 768px, 1024px, 1280px, 1920px.
+        Default: "full"
+    - desktop_padding_top (number): Top padding on desktop, in pixels. Default: 64
+    - desktop_padding_bottom (number): Bottom padding on desktop, in pixels. Default: 64
+    - desktop_padding_left (number): Left padding on desktop, in pixels. Default: 32
+    - desktop_padding_right (number): Right padding on desktop, in pixels. Default: 32
+    - desktop_margin_bottom (number): Bottom margin on desktop, in pixels. Default: 0
+    - mobile_padding_top (number): Top padding on mobile, in pixels. Default: 32
+    - mobile_padding_bottom (number): Bottom padding on mobile, in pixels. Default: 32
+    - mobile_padding_left (number): Left padding on mobile, in pixels. Default: 16
+    - mobile_padding_right (number): Right padding on mobile, in pixels. Default: 16
+    - mobile_margin_bottom (number): Bottom margin on mobile, in pixels. Default: 0
+    - color_scheme (color_scheme): Background color scheme applied to the section. Default: "scheme-1"
+
+  Usage example:
+    Add a "Generic Section" from the theme editor. Then drag any blocks
+    (e.g. Custom Text, Custom Image, Grid Row) inside it.
+
+    To create a centered editorial layout:
+      - Set content_max_width to "1024px"
+      - Set desktop_padding_top / desktop_padding_bottom to 80
+      - Set mobile_padding_top / mobile_padding_bottom to 40
+
+    To create a full-bleed background band:
+      - Set content_max_width to "full"
+      - Choose a contrasting color_scheme
+      - Set horizontal padding to 0 and control inner blocks independently
+
+  Notes:
+    - Desktop styles apply at 750px and above (Horizon standard breakpoint).
+    - Accepts any @theme blocks as children.
+    - The section renders a <section> element with the color scheme class
+      applied, so background and foreground colors are inherited from the
+      active scheme automatically.
+{% endcomment %}
+
+{% liquid
+  assign section_settings = section.settings
+  assign content_max_width = section_settings.content_max_width
+  assign desktop_padding_top = section_settings.desktop_padding_top
+  assign desktop_padding_bottom = section_settings.desktop_padding_bottom
+  assign desktop_padding_left = section_settings.desktop_padding_left
+  assign desktop_padding_right = section_settings.desktop_padding_right
+  assign desktop_margin_bottom = section_settings.desktop_margin_bottom
+  assign mobile_padding_top = section_settings.mobile_padding_top
+  assign mobile_padding_bottom = section_settings.mobile_padding_bottom
+  assign mobile_padding_left = section_settings.mobile_padding_left
+  assign mobile_padding_right = section_settings.mobile_padding_right
+  assign mobile_margin_bottom = section_settings.mobile_margin_bottom
+%}
+
+{% capture inline_styles %}
+  --gs-pt-mobile: {{ mobile_padding_top }}px;
+  --gs-pb-mobile: {{ mobile_padding_bottom }}px;
+  --gs-pl-mobile: {{ mobile_padding_left }}px;
+  --gs-pr-mobile: {{ mobile_padding_right }}px;
+  --gs-mb-mobile: {{ mobile_margin_bottom }}px;
+  --gs-pt-desktop: {{ desktop_padding_top }}px;
+  --gs-pb-desktop: {{ desktop_padding_bottom }}px;
+  --gs-pl-desktop: {{ desktop_padding_left }}px;
+  --gs-pr-desktop: {{ desktop_padding_right }}px;
+  --gs-mb-desktop: {{ desktop_margin_bottom }}px;
+{% endcapture %}
+
+{% stylesheet %}
+  .generic-section {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--gs-pt-mobile);
+    padding-bottom: var(--gs-pb-mobile);
+    padding-left: var(--gs-pl-mobile);
+    padding-right: var(--gs-pr-mobile);
+    margin-bottom: var(--gs-mb-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .generic-section {
+      padding-top: var(--gs-pt-desktop);
+      padding-bottom: var(--gs-pb-desktop);
+      padding-left: var(--gs-pl-desktop);
+      padding-right: var(--gs-pr-desktop);
+      margin-bottom: var(--gs-mb-desktop);
+    }
+  }
+
+  .generic-section__inner {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+
+  .generic-section__inner--full  { max-width: 100%; }
+  .generic-section__inner--768   { max-width: 768px; }
+  .generic-section__inner--1024  { max-width: 1024px; }
+  .generic-section__inner--1280  { max-width: 1280px; }
+  .generic-section__inner--1920  { max-width: 1920px; }
+{% endstylesheet %}
+
+<section
+  class="generic-section color-{{ section_settings.color_scheme }}"
+  style="{{ inline_styles | strip_newlines }}"
+>
+  <div class="generic-section__inner generic-section__inner--{{ content_max_width }}">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Generic Section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "content_max_width",
+      "label": "t:settings.max_width",
+      "info": "Maximum width of the inner content container. 'Full' stretches content to the section edges.",
+      "default": "full",
+      "options": [
+        { "value": "full", "label": "Full" },
+        { "value": "768",  "label": "768px" },
+        { "value": "1024", "label": "1024px" },
+        { "value": "1280", "label": "1280px" },
+        { "value": "1920", "label": "1920px" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Desktop styles"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_top",
+      "label": "t:settings.padding_top",
+      "default": 64,
+      "info": "Padding top in pixels (applies at 750px and above)"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_bottom",
+      "label": "t:settings.padding_bottom",
+      "default": 64,
+      "info": "Padding bottom in pixels (applies at 750px and above)"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_left",
+      "label": "t:settings.left_padding",
+      "default": 32,
+      "info": "Padding left in pixels (applies at 750px and above)"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_right",
+      "label": "t:settings.right_padding",
+      "default": 32,
+      "info": "Padding right in pixels (applies at 750px and above)"
+    },
+    {
+      "type": "number",
+      "id": "desktop_margin_bottom",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "Bottom margin in pixels (applies at 750px and above)"
+    },
+    {
+      "type": "header",
+      "content": "Mobile styles"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_top",
+      "label": "t:settings.padding_top",
+      "default": 32,
+      "info": "Padding top in pixels (applies below 750px)"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_bottom",
+      "label": "t:settings.padding_bottom",
+      "default": 32,
+      "info": "Padding bottom in pixels (applies below 750px)"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_left",
+      "label": "t:settings.left_padding",
+      "default": 16,
+      "info": "Padding left in pixels (applies below 750px)"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_right",
+      "label": "t:settings.right_padding",
+      "default": 16,
+      "info": "Padding right in pixels (applies below 750px)"
+    },
+    {
+      "type": "number",
+      "id": "mobile_margin_bottom",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "Bottom margin in pixels (applies below 750px)"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Generic Section",
+      "category": "Layout"
+    }
+  ]
+}
+{% endschema %}
