@@ -1,0 +1,480 @@
+{% doc %}
+  Block: Custom Group
+
+  Description:
+    A flexible container block that uses flexbox for layout with independent
+    desktop and mobile controls. Supports content distribution, alignment,
+    wrapping, and separate row/column gaps per breakpoint. Includes appearance
+    settings (color scheme, background media, borders, overlay), block link,
+    and padding.
+
+  Settings:
+    Desktop layout (750px and above):
+    - flex_direction_desktop (select): Flow direction — row or column. Default: "row"
+    - justify_content_desktop (select): Content distribution along main axis.
+        Options: flex-start, center, flex-end, space-between, space-around, space-evenly. Default: "flex-start"
+    - align_items_desktop (select): Content alignment on cross axis.
+        Options: flex-start, center, flex-end, stretch, baseline. Default: "stretch"
+    - flex_wrap_desktop (select): Whether items wrap. Options: nowrap, wrap. Default: "nowrap"
+    - row_gap_desktop (number): Vertical gap in px. Default: 12
+    - column_gap_desktop (number): Horizontal gap in px. Default: 12
+
+    Mobile layout (below 750px):
+    - flex_direction_mobile (select): Flow direction. Default: "column"
+    - justify_content_mobile (select): Content distribution. Default: "flex-start"
+    - align_items_mobile (select): Content alignment. Default: "stretch"
+    - flex_wrap_mobile (select): Whether items wrap. Default: "wrap"
+    - row_gap_mobile (number): Vertical gap in px. Default: 8
+    - column_gap_mobile (number): Horizontal gap in px. Default: 8
+
+    Size:
+    - width / custom_width: Desktop width (fit-content, fill, or custom %). Default: "fill"
+    - width_mobile / custom_width_mobile: Mobile width. Default: "fill"
+
+    Appearance:
+    - inherit_color_scheme (checkbox): Inherit parent color scheme. Default: true
+    - color_scheme: Color scheme when not inheriting
+    - background_media (select): none, image, or video. Default: "none"
+    - border, border_width, border_opacity, border_radius
+    - toggle_overlay, overlay_color, overlay_style, gradient_direction
+
+    Block link:
+    - link (url): Makes the entire group clickable
+    - open_in_new_tab (checkbox): Open link in new tab. Default: false
+
+    Padding:
+    - padding-block-start/end, padding-inline-start/end (range 0–100px). Default: 0
+
+  Usage example:
+    1. Add a "Generic Section" to the page.
+    2. Inside it, add a "Custom Group" block.
+    3. Set desktop direction to "row" for a horizontal layout.
+    4. Set mobile direction to "column" to stack items vertically.
+    5. Add child blocks (text, images, buttons, etc.) inside the group.
+
+  Notes:
+    - Desktop styles apply at 750px and above (Horizon standard breakpoint).
+    - Accepts any @theme and @app blocks as children.
+    - The block link covers the entire group; interactive children
+      (links, buttons, inputs) remain clickable through pointer-events passthrough.
+{% enddoc %}
+
+{%- capture children %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+{% render 'custom-group', children: children, settings: block.settings, shopify_attributes: block.shopify_attributes %}
+
+{% schema %}
+{
+  "name": "t:names.custom_group",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_divider"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.desktop_styles"
+    },
+    {
+      "type": "select",
+      "id": "flex_direction_desktop",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "row", "label": "t:options.horizontal" },
+        { "value": "column", "label": "t:options.vertical" }
+      ],
+      "default": "row"
+    },
+    {
+      "type": "select",
+      "id": "justify_content_desktop",
+      "label": "t:settings.content_distribution",
+      "info": "t:info.content_distribution",
+      "options": [
+        { "value": "flex-start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.end" },
+        { "value": "space-between", "label": "t:options.even_spacing" },
+        { "value": "space-around", "label": "t:options.even_spacing_with_edges" },
+        { "value": "space-evenly", "label": "t:options.equal_spacing" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "align_items_desktop",
+      "label": "t:settings.content_alignment",
+      "info": "t:info.content_alignment_cross",
+      "options": [
+        { "value": "flex-start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.end" },
+        { "value": "stretch", "label": "t:options.stretch_to_fill" },
+        { "value": "baseline", "label": "t:options.text_baseline" }
+      ],
+      "default": "stretch"
+    },
+    {
+      "type": "select",
+      "id": "flex_wrap_desktop",
+      "label": "t:settings.wrapping",
+      "info": "t:info.wrapping",
+      "options": [
+        { "value": "nowrap", "label": "t:options.no_wrapping" },
+        { "value": "wrap", "label": "t:options.allow_wrapping" }
+      ],
+      "default": "nowrap"
+    },
+    {
+      "type": "number",
+      "id": "row_gap_desktop",
+      "label": "t:settings.row_gap",
+      "default": 12,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "column_gap_desktop",
+      "label": "t:settings.column_gap",
+      "default": 12,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_styles"
+    },
+    {
+      "type": "select",
+      "id": "flex_direction_mobile",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "row", "label": "t:options.horizontal" },
+        { "value": "column", "label": "t:options.vertical" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "select",
+      "id": "justify_content_mobile",
+      "label": "t:settings.content_distribution",
+      "info": "t:info.content_distribution",
+      "options": [
+        { "value": "flex-start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.end" },
+        { "value": "space-between", "label": "t:options.even_spacing" },
+        { "value": "space-around", "label": "t:options.even_spacing_with_edges" },
+        { "value": "space-evenly", "label": "t:options.equal_spacing" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "align_items_mobile",
+      "label": "t:settings.content_alignment",
+      "info": "t:info.content_alignment_cross",
+      "options": [
+        { "value": "flex-start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.end" },
+        { "value": "stretch", "label": "t:options.stretch_to_fill" },
+        { "value": "baseline", "label": "t:options.text_baseline" }
+      ],
+      "default": "stretch"
+    },
+    {
+      "type": "select",
+      "id": "flex_wrap_mobile",
+      "label": "t:settings.wrapping",
+      "info": "t:info.wrapping",
+      "options": [
+        { "value": "nowrap", "label": "t:options.no_wrapping" },
+        { "value": "wrap", "label": "t:options.allow_wrapping" }
+      ],
+      "default": "wrap"
+    },
+    {
+      "type": "number",
+      "id": "row_gap_mobile",
+      "label": "t:settings.row_gap",
+      "default": 8,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "column_gap_mobile",
+      "label": "t:settings.column_gap",
+      "default": 8,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "header",
+      "content": "t:content.size"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "fit-content", "label": "t:options.fit_content" },
+        { "value": "fill", "label": "t:options.fill" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "t:settings.width_mobile",
+      "options": [
+        { "value": "fit-content", "label": "t:options.fit_content" },
+        { "value": "fill", "label": "t:options.fill" },
+        { "value": "custom", "label": "t:options.custom" }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "select",
+      "id": "background_media",
+      "label": "t:settings.background_media",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "image", "label": "t:options.image" },
+        { "value": "video", "label": "t:options.video" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:settings.video",
+      "visible_if": "{{ block.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "t:settings.video_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "contain", "label": "t:options.contain" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ block.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:settings.image",
+      "visible_if": "{{ block.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_position",
+      "label": "t:settings.image_position",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "fit", "label": "t:options.fit" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ block.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.borders",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "solid", "label": "t:options.solid" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "t:settings.border_width",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.border_opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "t:settings.background_overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:settings.overlay_color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ block.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "t:settings.overlay_style",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "gradient", "label": "t:options.gradient" }
+      ],
+      "default": "solid",
+      "visible_if": "{{ block.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "t:settings.gradient_direction",
+      "options": [
+        { "value": "to top", "label": "t:options.up" },
+        { "value": "to bottom", "label": "t:options.down" }
+      ],
+      "default": "to top",
+      "visible_if": "{{ block.settings.toggle_overlay and block.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.block_link"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "t:settings.open_new_tab",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "t:settings.image",
+      "visible_if": "{{ false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.custom_group",
+      "category": "t:categories.layout"
+    }
+  ]
+}
+{% endschema %}

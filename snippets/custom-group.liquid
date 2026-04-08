@@ -1,0 +1,132 @@
+{%- doc -%}
+  Renders block content for the custom group block.
+  A pure flexbox container with independent desktop/mobile controls,
+  plus appearance (color scheme, background media, borders, overlay)
+  and block link from Horizon group.
+
+  @param {string} children - The DOM content of the group block.
+  @param {object} settings - The settings of the group block.
+  @param {string} shopify_attributes - String with Shopify attributes for the editor.
+  @param {string} [class] - Custom classes for the group block.
+  @param {string} [style] - Custom inline styles for the group block.
+
+  @example
+  {% render 'custom-group', children: children, settings: block.settings, shopify_attributes: block.shopify_attributes %}
+{%- enddoc -%}
+
+{% capture inline_styles %}
+  --cg-dir-mobile: {{ settings.flex_direction_mobile }};
+  --cg-justify-mobile: {{ settings.justify_content_mobile }};
+  --cg-align-mobile: {{ settings.align_items_mobile }};
+  --cg-wrap-mobile: {{ settings.flex_wrap_mobile }};
+  --cg-row-gap-mobile: {{ settings.row_gap_mobile }}px;
+  --cg-col-gap-mobile: {{ settings.column_gap_mobile }}px;
+
+  --cg-dir-desktop: {{ settings.flex_direction_desktop }};
+  --cg-justify-desktop: {{ settings.justify_content_desktop }};
+  --cg-align-desktop: {{ settings.align_items_desktop }};
+  --cg-wrap-desktop: {{ settings.flex_wrap_desktop }};
+  --cg-row-gap-desktop: {{ settings.row_gap_desktop }}px;
+  --cg-col-gap-desktop: {{ settings.column_gap_desktop }}px;
+{% endcapture %}
+
+<div
+  class="
+    custom-group
+    custom-group--width-{{ settings.width }}
+    border-style
+    spacing-style
+    size-style
+    {% if settings.inherit_color_scheme == false %} color-{{ settings.color_scheme }}{% endif %}
+    {{ class }}
+  "
+  style="
+    {{ inline_styles | strip_newlines }}
+    {% render 'border-override', settings: settings %}
+    {% render 'spacing-style', settings: settings %}
+    {% render 'size-style', settings: settings %}
+    {{ style }}
+  "
+  {{ shopify_attributes }}
+>
+  {%- if settings.link != blank -%}
+    <a
+      href="{{ settings.link }}"
+      class="custom-group__link"
+      {% if settings.open_in_new_tab %}
+        target="_blank" rel="noopener"
+      {% endif %}
+    ></a>
+  {%- endif -%}
+
+  <div class="custom-group__media-wrapper">
+    {% render 'background-media',
+      background_media: settings.background_media,
+      background_video: settings.video,
+      background_video_position: settings.video_position,
+      background_image: settings.background_image,
+      background_image_position: settings.background_image_position,
+      placeholder: settings.placeholder
+    %}
+    {% if settings.toggle_overlay %}
+      {% render 'overlay', settings: settings, layer: '0' %}
+    {% endif %}
+  </div>
+
+  <div
+    class="
+      custom-group__content
+      {% if request.design_mode %}custom-group__content--design-mode{% endif %}
+    "
+  >
+    {{- children -}}
+  </div>
+</div>
+
+{% stylesheet %}
+  .custom-group {
+    position: relative;
+  }
+
+  .custom-group__link {
+    position: absolute;
+    inset: 0;
+  }
+
+  .custom-group__link ~ :is(.custom-group__content, .custom-group__media-wrapper) {
+    pointer-events: none;
+
+    :is(a, button, input, textarea, select) {
+      pointer-events: auto;
+    }
+  }
+
+  .custom-group__link ~ .custom-group__content--design-mode {
+    pointer-events: auto;
+  }
+
+  .custom-group__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: var(--cg-dir-mobile);
+    justify-content: var(--cg-justify-mobile);
+    align-items: var(--cg-align-mobile);
+    flex-wrap: var(--cg-wrap-mobile);
+    row-gap: var(--cg-row-gap-mobile);
+    column-gap: var(--cg-col-gap-mobile);
+    width: 100%;
+    height: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-group__content {
+      flex-direction: var(--cg-dir-desktop);
+      justify-content: var(--cg-justify-desktop);
+      align-items: var(--cg-align-desktop);
+      flex-wrap: var(--cg-wrap-desktop);
+      row-gap: var(--cg-row-gap-desktop);
+      column-gap: var(--cg-col-gap-desktop);
+    }
+  }
+{% endstylesheet %}

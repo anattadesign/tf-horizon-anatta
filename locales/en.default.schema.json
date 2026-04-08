@@ -230,7 +230,9 @@
     "carousel_layout_on_mobile": "Carousel is always used on mobile",
     "checkout_buttons": "Allows buyers to check out faster and can improve conversion. [Learn more](https://help.shopify.com/manual/online-store/dynamic-checkout)",
     "content_alignment": "Align text within the content area",
+    "content_alignment_cross": "How items are aligned perpendicular to the flow direction",
     "content_appearance": "Applies color scheme to the content area",
+    "content_distribution": "How items are spaced along the flow direction",
     "content_padding": "Inner padding of the content area in pixels",
     "content_position": "Position of the content area within the section",
     "content_width": "Width of the content area",
@@ -253,7 +255,8 @@
     "video_external": "Use a YouTube or Vimeo URL",
     "pills_usage": "Used for applied filters, discount codes, and search suggestions",
     "spacing_value": "Value in pixels",
-    "media_type_info": "Features are populated from your menu links"
+    "media_type_info": "Features are populated from your menu links",
+    "wrapping": "Whether items move to a new line when they run out of space"
   },
   "names": {
     "column": "Column",
@@ -339,6 +342,7 @@
     "grid_layout_selector": "Grid layout selector",
     // Layout container block that groups other content
     "group": "Group",
+    "custom_group": "Custom Group",
     "header": "Header",
     "heading": "Heading",
     "hero": "Hero",
@@ -460,6 +464,7 @@
     "above_carousel": "Above carousel",
     "accent": "Accent",
     "all": "All",
+    "allow_wrapping": "Allow wrapping",
     "always": "Always",
     "apple": "Apple",
     "arrow": "Arrow",
@@ -484,6 +489,7 @@
     "bottom_center": "Bottom center",
     "bottom_left": "Bottom left",
     "bottom_right": "Bottom right",
+    "baseline": "Baseline",
     "box": "Box",
     "button": "Button",
     "button_primary": "Primary button",
@@ -538,6 +544,9 @@
     "editorial": "Editorial",
     // Text alignment option for end of reading direction
     "end": "End",
+    "equal_spacing": "Equal spacing",
+    "even_spacing": "Even spacing",
+    "even_spacing_with_edges": "Even spacing with edges",
     "external": "External",
     "extra_large": "Extra large",
     "extra_small": "Extra small",
@@ -631,6 +640,7 @@
     "next_to_carousel": "Next to carousel",
     "none": "None",
     "normal": "Normal",
+    "no_wrapping": "No wrapping",
     "nowrap": "No wrap",
     "numbers": "Numbers",
     "nut_free": "Nut free",
@@ -723,7 +733,9 @@
     "social_youtube": "Social: YouTube",
     // Uniform style option for borders and overlays
     "solid": "Solid",
+    "space_around": "Space around",
     "space_between": "Space between",
+    "space_evenly": "Space evenly",
     "spotify": "Spotify",
     "spotlight": "Spotlight",
     "square": "Square",
@@ -736,12 +748,15 @@
     // CSS logical alignment option, beginning position
     "start": "Start",
     "stopwatch": "Stopwatch",
+    "stretch": "Stretch",
+    "stretch_to_fill": "Stretch to fill",
     "subheading": "Subheading",
     "subtle_zoom": "Zoom",
     "swatches": "Swatches",
     // Third-level option in font/typography hierarchy
     "tertiary": "Tertiary",
     "text": "Text",
+    "text_baseline": "Text baseline",
     "text_only": "Text only",
     // Icon stroke thickness option, thinnest weight
     "thin": "Thin",
@@ -771,6 +786,7 @@
     // Icon option for washing machine or laundry symbol
     "washing": "Washing",
     "wide": "Wide",
+    "wrap": "Wrap",
     "youtube": "YouTube",
     "with_hints": "With hints",
     "below_media": "Below media"
@@ -782,6 +798,7 @@
     "alignment": "Alignment",
     "alignment_mobile": "Mobile alignment",
     "align_baseline": "Align text baseline",
+    "align_items": "Align items",
     "animation": "Animation",
     "animation_repeat": "Repeat animation",
     "arrow_size": "Arrow size",
@@ -854,6 +871,7 @@
     "content": "Content",
     "content_alignment": "Content alignment",
     "content_direction": "Content direction",
+    "content_distribution": "Content distribution",
     "content_position": "Content position",
     "content_width": "Content width",
     "corner_radius": "Corner radius",
@@ -908,6 +926,7 @@
     "fixed_width": "Pixel width",
     // Checkbox to show country flag icon in localization selector
     "flag": "Flag",
+    "flex_wrap": "Flex wrap",
     "font": "Font",
     "font_family": "Font family",
     "font_price": "Price font",
@@ -923,6 +942,7 @@
     "heading_preset": "Heading preset",
     "headings": "Headings",
     "height": "Height",
+    "height_mobile": "Height (mobile)",
     "hide_logo_on_home_page": "Hide logo on home page",
     // Checkbox to hide padding control settings
     "hide_padding": "Hide padding",
@@ -956,6 +976,7 @@
     // Checkbox to embed submit button inside email input field
     "integrated_button": "Integrated button",
     "items_to_show": "Items to show",
+    "justify_content": "Justify content",
     "label": "Label",
     "language_selector": "Language selector",
     "large": "Large",
@@ -1198,6 +1219,7 @@
     "width_desktop": "Desktop width",
     "width_mobile": "Mobile width",
     "wrap": "Wrap",
+    "wrapping": "Wrapping",
     "z_index": "Z-index",
     "product_corner_radius": "Product corner radius",
     "card_corner_radius": "Card corner radius",
