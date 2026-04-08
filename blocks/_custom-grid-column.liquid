@@ -1,0 +1,151 @@
+{% doc %}
+  Block: Custom Grid Column
+
+  Description:
+    A column block designed to live inside a Custom Grid Row. Controls how many
+    of the 12 grid columns this element spans, its visual order, and its height
+    at each breakpoint.
+
+  Settings:
+    Desktop styles (apply at 750px and above):
+    - span_desktop (range 1–12): Number of grid columns to span. Default: 6
+    - order_desktop (range 1–12): Visual ordering position. Default: 1
+    - height_desktop (select): Column height — "auto" or "100%" (full). Default: "auto"
+
+    Mobile styles (apply below 750px):
+    - span_mobile (range 1–12): Number of grid columns to span. Default: 12
+    - order_mobile (range 1–12): Visual ordering position. Default: 1
+    - height_mobile (select): Column height — "auto" or "100%" (full). Default: "auto"
+
+  Usage example:
+    1. Add a "Generic Section" to the page.
+    2. Inside it, add a "Custom Grid Row" block.
+    3. Inside the row, add two "Custom Grid Col" blocks — set each to span 6
+       columns on desktop for a 50/50 split.
+    4. For mobile, set each column to span 12 so they stack full-width.
+    5. Add content blocks (Custom Text, Custom Image, etc.) inside each col.
+
+  Notes:
+    - Must be placed inside a Custom Grid Row block.
+    - The parent row provides the 12-column grid; this block only controls
+      its own span, order, and height within that grid.
+{% enddoc %}
+
+{% liquid
+  assign s = block.settings
+%}
+
+{% capture inline_styles %}
+  --cgc-span-mobile: {{ s.span_mobile }};
+  --cgc-span-desktop: {{ s.span_desktop }};
+  --cgc-order-mobile: {{ s.order_mobile }};
+  --cgc-order-desktop: {{ s.order_desktop }};
+  --cgc-height-mobile: {{ s.height_mobile }};
+  --cgc-height-desktop: {{ s.height_desktop }};
+{% endcapture %}
+
+{% stylesheet %}
+  .custom-grid-column {
+    grid-column: span var(--cgc-span-mobile);
+    order: var(--cgc-order-mobile);
+    height: var(--cgc-height-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-grid-column {
+      grid-column: span var(--cgc-span-desktop);
+      order: var(--cgc-order-desktop);
+      height: var(--cgc-height-desktop);
+    }
+  }
+{% endstylesheet %}
+
+<div
+  class="custom-grid-column"
+  style="{{ inline_styles | strip_newlines }}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "Grid Column",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.desktop_styles"
+    },
+    {
+      "type": "range",
+      "id": "span_desktop",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "label": "t:settings.column_span"
+    },
+    {
+      "type": "range",
+      "id": "order_desktop",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1,
+      "label": "t:settings.order"
+    },
+    {
+      "type": "select",
+      "id": "height_desktop",
+      "label": "t:settings.height",
+      "default": "auto",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "100%", "label": "Full" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_styles"
+    },
+    {
+      "type": "range",
+      "id": "span_mobile",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 12,
+      "label": "t:settings.column_span"
+    },
+    {
+      "type": "range",
+      "id": "order_mobile",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1,
+      "label": "t:settings.order"
+    },
+    {
+      "type": "select",
+      "id": "height_mobile",
+      "default": "auto",
+      "label": "t:settings.height",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "100%", "label": "Full" }
+      ]
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" }
+  ],
+  "presets": [
+    {
+      "name": "Grid Column",
+      "category": "Layout"
+    }
+  ]
+}
+{% endschema %}

@@ -58,6 +58,8 @@
     "content_width": "Content width only applies when the section width is set to full width.",
     "copyright": "Copyright",
     "customer_account": "Customer account",
+    "desktop_styles": "Desktop styles",
+    "mobile_styles": "Mobile styles",
     "describe_the_video_for": "Describe the video for customers using screen readers. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/theme-features#video-block)",
     "edit_empty_state_collection_in_theme_settings": "Edit empty state collection in [theme settings](/editor?context=theme&category=search)",
     "edit_logo_in_theme_settings": "Edit logo in [theme settings](/editor?context=theme&category=logo%20and%20favicon)",
@@ -819,6 +821,8 @@
     "color_scheme": "Color scheme",
     "colors": "Colors",
     "columns": "Columns",
+    "column_gap": "Column gap",
+    "column_span": "Column span",
     // Layout container block name for grouping other blocks
     "content": "Content",
     "content_alignment": "Content alignment",
@@ -977,6 +981,7 @@
     "opacity": "Opacity",
     "open_new_tab": "Open link in new tab",
     "open_row_by_default": "Open row by default",
+    "order": "Order",
     "overlay": "Overlay",
     "overlay_color": "Overlay color",
     "overlay_opacity": "Overlay opacity",
@@ -1064,6 +1069,7 @@
     // Setting for search bar placement in header
     "search_position": "Position",
     "search_row": "Row",
+    "row_gap": "Row gap",
     "row_height": "Row height",
     "secondary_button_background": "Secondary button background",
     "secondary_button_border": "Secondary button border",
