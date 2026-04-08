@@ -62,10 +62,16 @@
     "customer_account": "Customer account",
     "desktop_content": "Desktop content",
     "desktop_overlay": "Desktop overlay",
+    "desktop_padding": "Desktop padding",
+    "desktop_spacing": "Desktop spacing",
     "desktop_styles": "Desktop styles",
+    "desktop_typography": "Desktop typography",
     "mobile_content": "Mobile content",
     "mobile_overlay": "Mobile overlay",
+    "mobile_padding": "Mobile padding",
+    "mobile_spacing": "Mobile spacing",
     "mobile_styles": "Mobile styles",
+    "mobile_typography": "Mobile typography",
     "describe_the_video_for": "Describe the video for customers using screen readers. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/theme-features#video-block)",
     "edit_empty_state_collection_in_theme_settings": "Edit empty state collection in [theme settings](/editor?context=theme&category=search)",
     "edit_logo_in_theme_settings": "Edit logo in [theme settings](/editor?context=theme&category=logo%20and%20favicon)",
@@ -256,6 +262,8 @@
     "pills_usage": "Used for applied filters, discount codes, and search suggestions",
     "spacing_value": "Value in pixels",
     "media_type_info": "Features are populated from your menu links",
+    "mobile_typography_fallback": "Set to 'Inherit from desktop' to use desktop typography on mobile",
+    "text_mobile_fallback": "Leave empty to use desktop text on all screen sizes",
     "wrapping": "Whether items move to a new line when they run out of space"
   },
   "names": {
@@ -448,6 +456,7 @@
     "swatches": "Swatches",
     "testimonials": "Testimonials",
     "text": "Text",
+    "custom_text": "Custom Text",
     "title": "Title",
     "typography": "Typography",
     "utilities": "Utilities",
@@ -599,6 +608,7 @@
     "icon": "Icon",
     "icons": "Icons",
     "image": "Image",
+    "inherit_from_desktop": "Inherit from desktop",
     "input": "Input",
     "inside_carousel": "Inside carousel",
     "instagram": "Instagram",
@@ -1004,6 +1014,7 @@
     "make_details_sticky_desktop": "Sticky on desktop",
     "make_section_full_width": "Make section full width",
     "margin_bottom": "Margin bottom",
+    "margin_top": "Margin top",
     "max_width": "Max width",
     // Section header for product card media settings
     "media": "Media",
@@ -1173,6 +1184,7 @@
     "tertiary_font": "Tertiary font",
     // Generic label for text-related settings (content or color)
     "text": "Text",
+    "text_mobile": "Text (mobile)",
     // Text capitalization setting for typography (uppercase/lowercase)
     "text_case": "Case",
     "text_hierarchy": "Text hierarchy",

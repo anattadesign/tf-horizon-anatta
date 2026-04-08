@@ -1,0 +1,384 @@
+{%- doc -%}
+  Renders the custom text block with separate desktop/mobile content,
+  width, max-width, and typography controls.
+
+  Supports independent desktop and mobile typography presets (rte, paragraph,
+  h1–h6, or custom). When "custom" is selected, font family, weight, size,
+  line height, letter spacing, case, wrap, and margin top/bottom are
+  configurable. Desktop and mobile custom margin resets are scoped per
+  breakpoint so presets on each side work independently.
+
+  @param {object} block - The block object
+  @param {string} [class] - Custom class
+  @param {string} [fallback_text] - Fallback text if settings.text is empty
+  @param {string} [width] - Override width
+
+  @example
+  {% render 'custom-text', block: block %}
+{%- enddoc -%}
+
+{% liquid
+  assign s = block.settings
+  assign plain_text = s.text | strip_newlines | strip
+  assign visible_text = plain_text | strip_html
+  assign text_width = width | default: s.width
+
+  assign plain_text_mobile = s.text_mobile | strip_newlines | strip
+  assign visible_text_mobile = plain_text_mobile | strip_html
+
+  if s.font_size contains 'heading-lg' or s.font_size contains 'heading-xl'
+    assign type = 'display'
+  elsif s.font_size contains 'heading'
+    assign type = 'heading'
+  else
+    assign type = 'body'
+  endif
+
+  if s.type_preset == 'rte' or s.type_preset == 'paragraph'
+    assign is_rte = true
+  endif
+
+  assign mobile_preset = s.type_preset_mobile
+  assign mobile_is_inherit = false
+  if mobile_preset == 'inherit'
+    assign mobile_preset = s.type_preset
+    assign mobile_is_inherit = true
+  endif
+
+  capture text_block_classes
+    if text_width == '100%'
+      echo 'ct-block--align-' | append: s.alignment
+      if s.max_width == 'none'
+        echo ' ct-block--full-width '
+      endif
+    endif
+    if s.type_preset == 'custom'
+      echo ' custom-typography '
+      if s.font_size != ''
+        echo ' custom-font-size '
+      endif
+    endif
+    if s.color != blank
+      echo ' ct-block--custom-color '
+    endif
+    if s.background
+      echo ' ct-block--background '
+    endif
+    if is_rte
+      echo ' rte '
+    endif
+  endcapture
+
+  capture mobile_text_block_classes
+    assign mobile_width = s.width_mobile
+    if mobile_width == '100%'
+      echo 'ct-block--mobile-align-' | append: s.alignment_mobile
+      if s.max_width_mobile == 'none'
+        echo ' ct-block--mobile-full-width '
+      endif
+    endif
+  endcapture
+
+  assign max_width_desktop = 'var(--max-width--' | append: type | append: '-' | append: s.max_width | append: ')'
+  if s.max_width == 'custom'
+    assign max_width_desktop = s.custom_max_width | append: 'px'
+  endif
+
+  assign max_width_mobile_val = 'var(--max-width--' | append: type | append: '-' | append: s.max_width_mobile | append: ')'
+  if s.max_width_mobile == 'custom'
+    assign max_width_mobile_val = s.custom_max_width_mobile | append: 'px'
+  endif
+%}
+
+{% capture inline_styles %}
+  {% render 'typography-style', settings: s %}
+  --ct-width-desktop: {{ text_width }};
+  --ct-max-width-desktop: {{ max_width_desktop }};
+  --ct-width-mobile: {{ s.width_mobile }};
+  --ct-max-width-mobile: {{ max_width_mobile_val }};
+  {% if text_width == "100%" %}
+    --ct-text-align-desktop: {{ s.alignment }};
+  {% endif %}
+  {% if s.width_mobile == "100%" %}
+    --ct-text-align-mobile: {{ s.alignment_mobile }};
+  {% endif %}
+  {% if s.color != blank %}
+    --ct-color: {{ s.color }};
+  {% endif %}
+  {% if s.type_preset == 'custom' %}
+    --ct-mt-desktop: {{ s.margin_top | default: 0 }}px;
+    --ct-mb-desktop: {{ s.margin_bottom | default: 0 }}px;
+  {% endif %}
+  {% if mobile_preset == 'custom' and mobile_is_inherit == false %}
+    --ct-mt-mobile: {{ s.margin_top_mobile | default: 0 }}px;
+    --ct-mb-mobile: {{ s.margin_bottom_mobile | default: 0 }}px;
+  {% elsif s.type_preset == 'custom' %}
+    --ct-mt-mobile: {{ s.margin_top | default: 0 }}px;
+    --ct-mb-mobile: {{ s.margin_bottom | default: 0 }}px;
+  {% endif %}
+  {% if s.background %}
+    --ct-background-color: {{ s.background_color | default: 'rgb(255 255 255 / 1.0)' }};
+    --ct-corner-radius: {{ s.corner_radius }}px;
+    --ct-bg-padding: max(var(--padding-2xs), calc((var(--ct-corner-radius) + var(--padding-xs)) * (1 - cos(45deg))));
+  {% endif %}
+
+  {% comment %} Mobile typography — applied via media query on the block itself {% endcomment %}
+  {% unless mobile_is_inherit %}
+    {% if mobile_preset == 'custom' %}
+      {% if s.font_size_mobile != blank %}
+        --ct-m-font-size: {{ s.font_size_mobile }};
+      {% endif %}
+      --ct-m-font-family: {{ s.font_mobile }};
+      {% if s.weight_mobile != blank %}
+        --ct-m-font-weight: {{ s.weight_mobile }};
+      {% else %}
+        --ct-m-font-weight: {{ s.font_mobile | replace: 'family', 'weight' }};
+      {% endif %}
+      --ct-m-text-transform: {{ s.case_mobile }};
+      --ct-m-text-wrap: {{ s.wrap_mobile | default: 'pretty' }};
+      --ct-m-line-height: var(--line-height--{{ type }}-{{ s.line_height_mobile }});
+      --ct-m-letter-spacing: var(--letter-spacing--{{ type }}-{{ s.letter_spacing_mobile }});
+    {% elsif mobile_preset == 'h1' %}
+      --ct-m-font-size: var(--font-h1--size);
+      --ct-m-font-family: var(--font-heading--family);
+      --ct-m-font-weight: var(--font-heading--weight);
+      --ct-m-line-height: var(--font-h1--line-height);
+      --ct-m-letter-spacing: var(--font-h1--letter-spacing);
+      --ct-m-text-transform: var(--font-heading--text-transform);
+    {% elsif mobile_preset == 'h2' %}
+      --ct-m-font-size: var(--font-h2--size);
+      --ct-m-font-family: var(--font-heading--family);
+      --ct-m-font-weight: var(--font-heading--weight);
+      --ct-m-line-height: var(--font-h2--line-height);
+      --ct-m-letter-spacing: var(--font-h2--letter-spacing);
+      --ct-m-text-transform: var(--font-heading--text-transform);
+    {% elsif mobile_preset == 'h3' %}
+      --ct-m-font-size: var(--font-h3--size);
+      --ct-m-font-family: var(--font-heading--family);
+      --ct-m-font-weight: var(--font-heading--weight);
+      --ct-m-line-height: var(--font-h3--line-height);
+      --ct-m-letter-spacing: var(--font-h3--letter-spacing);
+      --ct-m-text-transform: var(--font-heading--text-transform);
+    {% elsif mobile_preset == 'h4' %}
+      --ct-m-font-size: var(--font-h4--size);
+      --ct-m-font-family: var(--font-heading--family);
+      --ct-m-font-weight: var(--font-heading--weight);
+      --ct-m-line-height: var(--font-h4--line-height);
+      --ct-m-letter-spacing: var(--font-h4--letter-spacing);
+      --ct-m-text-transform: var(--font-heading--text-transform);
+    {% elsif mobile_preset == 'h5' %}
+      --ct-m-font-size: var(--font-h5--size);
+      --ct-m-font-family: var(--font-heading--family);
+      --ct-m-font-weight: var(--font-heading--weight);
+      --ct-m-line-height: var(--font-h5--line-height);
+      --ct-m-letter-spacing: var(--font-h5--letter-spacing);
+      --ct-m-text-transform: var(--font-heading--text-transform);
+    {% elsif mobile_preset == 'h6' %}
+      --ct-m-font-size: var(--font-h6--size);
+      --ct-m-font-family: var(--font-heading--family);
+      --ct-m-font-weight: var(--font-heading--weight);
+      --ct-m-line-height: var(--font-h6--line-height);
+      --ct-m-letter-spacing: var(--font-h6--letter-spacing);
+      --ct-m-text-transform: var(--font-heading--text-transform);
+    {% elsif mobile_preset == 'paragraph' %}
+      --ct-m-font-size: var(--font-body--size);
+      --ct-m-font-family: var(--font-body--family);
+      --ct-m-font-weight: var(--font-body--weight);
+      --ct-m-line-height: var(--font-body--line-height);
+      --ct-m-letter-spacing: var(--font-body--letter-spacing);
+    {% endif %}
+    {% if s.color_mobile != blank %}
+      --ct-m-color: {{ s.color_mobile }};
+    {% endif %}
+  {% endunless %}
+{% endcapture %}
+
+{% liquid
+  assign element = 'div'
+  if is_rte
+    assign element = 'rte-formatter'
+  endif
+
+  assign has_mobile_typo = false
+  unless mobile_is_inherit
+    assign has_mobile_typo = true
+  endunless
+%}
+
+{% capture attributes %}
+  class="{{ class }} ct-block ct-block--{{ block.id }} {{ s.type_preset }} {% if has_mobile_typo %}ct-block--has-mobile-typo{% endif %} {% if mobile_preset == 'custom' %}ct-block--mobile-custom{% endif %} {{ text_block_classes }} {{ mobile_text_block_classes }}"
+  style="{{ inline_styles | strip_newlines }}"
+  {{ block.shopify_attributes }}
+{% endcapture %}
+
+{% if visible_text != blank or visible_text_mobile != blank or fallback_text != blank %}
+  <{{ element }} {{ attributes | strip_newlines | strip }}>
+    {% if visible_text_mobile != blank %}
+      <span class="ct-block__mobile-content">{{ s.text_mobile }}</span>
+    {% endif %}
+    {% if visible_text != blank %}
+      <span class="ct-block__desktop-content {% if visible_text_mobile == blank %}ct-block__desktop-content--always{% endif %}">{{ s.text }}</span>
+    {% elsif fallback_text != blank %}
+      <span class="ct-block__desktop-content {% if visible_text_mobile == blank %}ct-block__desktop-content--always{% endif %}">{{ fallback_text }}</span>
+    {% endif %}
+  </{{ element }}>
+{% endif %}
+
+{% stylesheet %}
+  .ct-block {
+    width: var(--ct-width-mobile);
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: var(--horizontal-alignment);
+    margin-top: var(--ct-mt-mobile, 0);
+    margin-bottom: var(--ct-mb-mobile, 0);
+  }
+
+  .ct-block > * {
+    width: var(--ct-width-mobile);
+    max-inline-size: min(100%, var(--ct-max-width-mobile, 100%));
+    text-align: var(--ct-text-align-mobile, var(--text-align-default, left));
+    text-wrap: var(--text-wrap);
+  }
+
+  /* Mobile typography: override all text within the block below 750px */
+  @media screen and (max-width: 749px) {
+    .ct-block--has-mobile-typo,
+    .ct-block--has-mobile-typo > *,
+    .ct-block--has-mobile-typo :is(h1, h2, h3, h4, h5, h6, p, span) {
+      font-size: var(--ct-m-font-size, inherit);
+      font-family: var(--ct-m-font-family, inherit);
+      font-weight: var(--ct-m-font-weight, inherit);
+      line-height: var(--ct-m-line-height, inherit);
+      letter-spacing: var(--ct-m-letter-spacing, inherit);
+      text-transform: var(--ct-m-text-transform, inherit);
+      text-wrap: var(--ct-m-text-wrap, inherit);
+      color: var(--ct-m-color, inherit);
+    }
+  }
+
+  /* Mobile content: visible on mobile, hidden on desktop */
+  .ct-block__mobile-content {
+    display: block;
+  }
+
+  /* Desktop content: hidden on mobile when mobile content exists */
+  .ct-block__desktop-content {
+    display: none;
+  }
+
+  /* Show desktop content on all breakpoints when no mobile content */
+  .ct-block__desktop-content--always {
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ct-block {
+      width: var(--ct-width-desktop);
+      margin-top: var(--ct-mt-desktop, 0);
+      margin-bottom: var(--ct-mb-desktop, 0);
+    }
+
+    .ct-block > * {
+      width: var(--ct-width-desktop);
+      max-inline-size: min(100%, var(--ct-max-width-desktop, 100%));
+      text-align: var(--ct-text-align-desktop, var(--text-align-default, left));
+    }
+
+    /* Desktop: always show desktop content, hide mobile content */
+    .ct-block__desktop-content,
+    .ct-block__desktop-content--always {
+      display: block;
+    }
+
+    .ct-block__mobile-content {
+      display: none;
+    }
+  }
+
+  .ct-block:not(.ct-block--full-width).rte,
+  .ct-block:not(.ct-block--full-width).paragraph {
+    text-wrap: balance;
+    text-wrap: pretty;
+  }
+
+  .ct-block:not(.ct-block--full-width):is(.h1, .h2, .h3, .h4, .h5, .h6) {
+    text-wrap: balance;
+  }
+
+  .ct-block:is(.h1, .h2, .h3, .h4, .h5, .h6) a {
+    text-decoration-color: transparent;
+  }
+
+  /* Default preset margins — applied when a preset (h1-h6, p) is selected */
+  .ct-block h1,
+  .ct-block.h1 > * { margin-block: var(--font-h1--spacing); }
+
+  .ct-block h2,
+  .ct-block.h2 > * { margin-block: var(--font-h2--spacing); }
+
+  .ct-block h3,
+  .ct-block.h3 > * { margin-block: var(--font-h3--spacing); }
+
+  .ct-block h4,
+  .ct-block.h4 > * { margin-block: var(--font-h4--spacing); }
+
+  .ct-block h5,
+  .ct-block.h5 > * { margin-block: var(--font-h5--spacing); }
+
+  .ct-block h6,
+  .ct-block.h6 > * { margin-block: var(--font-h6--spacing); }
+
+  .ct-block p,
+  .ct-block.p > * { margin-block: var(--font-paragraph--spacing); }
+
+  /* When custom typography is selected, remove default preset margins
+     so the merchant's margin-top/bottom settings have full control.
+     Scoped per breakpoint so desktop and mobile presets work independently. */
+  @media screen and (min-width: 750px) {
+    .ct-block.custom :is(h1, h2, h3, h4, h5, h6, p, span) {
+      margin-block: 0;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ct-block--mobile-custom :is(h1, h2, h3, h4, h5, h6, p, span) {
+      margin-block: 0;
+    }
+  }
+
+  .ct-block > *:first-child { margin-block-start: 0; }
+  .ct-block > *:last-child { margin-block-end: 0; }
+
+  .ct-block--align-center,
+  .ct-block--align-center > * { margin-inline: auto; }
+
+  .ct-block--align-right,
+  .ct-block--align-right > * { margin-inline-start: auto; }
+
+  .ct-block--mobile-align-center,
+  .ct-block--mobile-align-center > * { margin-inline: auto; }
+
+  .ct-block--mobile-align-right,
+  .ct-block--mobile-align-right > * { margin-inline-start: auto; }
+
+  @media screen and (min-width: 750px) {
+    .ct-block--mobile-align-center,
+    .ct-block--mobile-align-center > * { margin-inline: unset; }
+
+    .ct-block--mobile-align-right,
+    .ct-block--mobile-align-right > * { margin-inline-start: unset; }
+  }
+
+  .ct-block--background {
+    background-color: var(--ct-background-color);
+    border-radius: var(--ct-corner-radius);
+    padding: var(--ct-bg-padding);
+  }
+
+  .ct-block--custom-color,
+  .ct-block--custom-color > :is(h1, h2, h3, h4, h5, h6, p, span, *) {
+    color: var(--ct-color);
+  }
+{% endstylesheet %}
