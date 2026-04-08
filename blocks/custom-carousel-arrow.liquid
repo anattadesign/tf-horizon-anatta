@@ -1,0 +1,211 @@
+{% doc %}
+  Block: Carousel Arrows
+
+  Description:
+    Previous/next navigation buttons for a Custom Carousel. Must be placed
+    as a sibling block in the same section as the carousel, and the carousel
+    must have arrows_type set to "external".
+
+  Settings:
+    - icons_style (select): "arrow" or "chevron". Default: "arrow"
+    - icons_shape (select): "none", "circle", or "square". Default: "none"
+    - arrow_size_desktop (range 16–64): Arrow icon size on desktop in px. Default: 24
+    - arrow_size_mobile (range 16–64): Arrow icon size on mobile in px. Default: 20
+
+  Usage example:
+    1. Add a "Generic Section" to the page.
+    2. Add a "Block Carousel" block with arrows_type = "external".
+    3. Add a "Carousel Arrows" block as a sibling (not inside the carousel).
+
+  Notes:
+    - Links to the carousel via section.id — both blocks must share
+      the same parent section.
+{% enddoc %}
+
+{% liquid
+  assign prev_id = 'prev-' | append: section.id
+  assign next_id = 'next-' | append: section.id
+  assign s = block.settings
+%}
+
+{% capture inline_styles %}
+  --cca-size-mobile: {{ s.arrow_size_mobile }}px;
+  --cca-size-desktop: {{ s.arrow_size_desktop }}px;
+{% endcapture %}
+
+{% stylesheet %}
+  .custom-carousel-arrows {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .custom-carousel-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+  }
+
+  .custom-carousel-arrow:disabled {
+    opacity: 0.5;
+  }
+
+  .custom-carousel-arrow--bordered {
+    border: 1px solid currentColor;
+  }
+
+  .custom-carousel-arrow--circle {
+    border-radius: 50%;
+  }
+
+  .custom-carousel-arrow--square {
+    border-radius: 0;
+  }
+
+  .custom-carousel-arrow__icon {
+    width: var(--cca-size-mobile);
+    height: var(--cca-size-mobile);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .custom-carousel-arrow__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .custom-carousel-arrow__icon--rotate-90 {
+    transform: rotate(90deg);
+  }
+
+  .custom-carousel-arrow__icon--rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  .custom-carousel-arrow__icon--rotate-270 {
+    transform: rotate(-90deg);
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-carousel-arrow__icon {
+      width: var(--cca-size-desktop);
+      height: var(--cca-size-desktop);
+    }
+  }
+{% endstylesheet %}
+
+{% liquid
+  assign shape_class = ''
+  assign bordered_class = ''
+  if s.icons_shape == 'circle'
+    assign shape_class = 'custom-carousel-arrow--circle'
+    assign bordered_class = 'custom-carousel-arrow--bordered'
+  elsif s.icons_shape == 'square'
+    assign shape_class = 'custom-carousel-arrow--square'
+    assign bordered_class = 'custom-carousel-arrow--bordered'
+  endif
+%}
+
+<div
+  class="custom-carousel-arrows"
+  style="{{ inline_styles | strip_newlines }}"
+  {{ block.shopify_attributes }}
+>
+  <button
+    type="button"
+    id="{{ prev_id }}"
+    class="custom-carousel-arrow {{ shape_class }} {{ bordered_class }}"
+    aria-label="{{ 'accessibility.slideshow_previous' | t }}"
+  >
+    <span class="custom-carousel-arrow__icon">
+      {%- if s.icons_style == 'chevron' -%}
+        <span class="custom-carousel-arrow__icon--rotate-90">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      {%- else -%}
+        <span class="custom-carousel-arrow__icon--rotate-180">{{- 'icon-arrow.svg' | inline_asset_content -}}</span>
+      {%- endif -%}
+    </span>
+  </button>
+
+  <button
+    type="button"
+    id="{{ next_id }}"
+    class="custom-carousel-arrow {{ shape_class }} {{ bordered_class }}"
+    aria-label="{{ 'accessibility.slideshow_next' | t }}"
+  >
+    <span class="custom-carousel-arrow__icon">
+      {%- if s.icons_style == 'chevron' -%}
+        <span class="custom-carousel-arrow__icon--rotate-270">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      {%- else -%}
+        {{- 'icon-arrow.svg' | inline_asset_content -}}
+      {%- endif -%}
+    </span>
+  </button>
+</div>
+
+{% schema %}
+{
+  "name": "Carousel Arrows",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icons_style",
+      "label": "t:settings.icons",
+      "options": [
+        { "value": "arrow", "label": "t:options.arrows" },
+        { "value": "chevron", "label": "t:options.chevrons" }
+      ],
+      "default": "arrow"
+    },
+    {
+      "type": "select",
+      "id": "icons_shape",
+      "label": "t:settings.shape",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "circle", "label": "t:options.circle" },
+        { "value": "square", "label": "t:options.square" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_styles"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size_desktop",
+      "label": "t:settings.arrow_size",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_styles"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size_mobile",
+      "label": "t:settings.arrow_size",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Carousel Arrows",
+      "category": "t:categories.layout"
+    }
+  ]
+}
+{% endschema %}

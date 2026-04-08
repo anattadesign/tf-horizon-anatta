@@ -222,7 +222,9 @@
     "actions_display_style": "Icons are always used on mobile",
     "applies_on_image_only": "Applies to images only",
     "aspect_ratio_adjusted": "Adjusted in some layouts",
+    "autoplay_speed": "Delay between slide transitions in seconds",
     "bg_color_info": "Used as fallback when no image or video is set",
+    "columns_peek": "Use a decimal like 2.3 to peek the next slide (2 full slides + 30% of the next)",
     "bg_video_info": "Video takes priority over background image",
     "carousel_hover_behavior_not_supported": "\"Carousel\" hover is not supported when \"Carousel\" type is selected at the section level",
     "carousel_layout_on_mobile": "Carousel is always used on mobile",
@@ -535,6 +537,7 @@
     "editorial": "Editorial",
     // Text alignment option for end of reading direction
     "end": "End",
+    "external": "External",
     "extra_large": "Extra large",
     "extra_small": "Extra small",
     // Icon option for decorative eye symbol
@@ -642,6 +645,7 @@
     "one_third": "1/3",
     // Star rating style showing empty star outlines
     "outline": "Outline",
+    "overlay": "Overlay",
     "page": "Page",
     "page_center_aligned": "Page, center aligned",
     "page_left_aligned": "Page, left aligned",
@@ -779,6 +783,8 @@
     "align_baseline": "Align text baseline",
     "animation": "Animation",
     "animation_repeat": "Repeat animation",
+    "arrow_size": "Arrow size",
+    "arrows_type": "Arrows type",
     "add_discount_code": "Allow discounts in cart",
     "add_to_cart_animation": "Add to cart",
     "always_stack_buttons": "Always stack buttons",
