@@ -1,0 +1,732 @@
+{% doc %}
+  Block: Custom Hero
+
+  Description:
+    A full-featured hero banner with support for background images, videos,
+    color overlays with configurable direction, and flexible content positioning.
+    Designed to be placed inside a Generic Section (which handles max-width).
+
+  Settings:
+    Desktop (750px and above):
+    - desktop_defined_height (select): "custom" or "full_height". Default: "full_height"
+    - desktop_custom_height (number): Height in px when custom. Default: 600
+    - background_color_desktop (color): Fallback background color. Default: "#ffffff"
+    - desktop_image (image_picker): Background image (video takes priority)
+    - desktop_video (video): Background video (highest priority)
+    - desktop_overlay_enabled (checkbox): Enable overlay. Default: false
+    - desktop_overlay_color (color): Overlay color. Default: "#000000"
+    - desktop_overlay_opacity (range 0–100): Overlay opacity. Default: 40
+    - desktop_overlay_direction (select): Gradient direction or solid. Default: "solid"
+    - desktop_content_width (range 1–100): Width of content area in %. Default: 50
+    - desktop_content_position (select): 9-point grid position. Default: "top-left"
+    - desktop_content_alignment (select): Flex alignment of child blocks. Default: "flex-start"
+    - desktop_content_padding (number): Inner content padding. Default: 0
+    - desktop_padding_top/bottom/left/right (number): Section padding
+    - desktop_margin_bottom (number): Bottom margin
+
+    Mobile (below 750px):
+    - Same set of controls as desktop with mobile-appropriate defaults
+
+    Appearance:
+    - color_scheme: Color scheme for the content area
+
+  Usage example:
+    1. Add a "Generic Section" to the page.
+    2. Inside it, add a "Hero" block.
+    3. Set a background image or video for desktop and mobile.
+    4. Optionally enable overlay and pick a color + direction.
+    5. Add child blocks (text, buttons, etc.) inside the hero.
+
+  Notes:
+    - Max-width is handled by the parent Generic Section.
+    - Background priority: video > image > solid color.
+    - Overlay renders between the background media and the content.
+    - Content alignment uses flexbox align-items so child blocks
+      position correctly regardless of their internal markup.
+{% enddoc %}
+
+{% liquid
+  assign s = block.settings
+%}
+
+{% capture inline_styles %}
+  --ch-pt-mobile: {{ s.mobile_padding_top }}px;
+  --ch-pb-mobile: {{ s.mobile_padding_bottom }}px;
+  --ch-pl-mobile: {{ s.mobile_padding_left }}px;
+  --ch-pr-mobile: {{ s.mobile_padding_right }}px;
+  --ch-mb-mobile: {{ s.mobile_margin_bottom }}px;
+  --ch-bg-mobile: {{ s.background_color_mobile }};
+  --ch-height-mobile: {{ s.mobile_custom_height }}px;
+  --ch-content-padding-mobile: {{ s.mobile_content_padding }}px;
+  --ch-content-width-mobile: {{ s.mobile_content_width }}%;
+  --ch-content-align-mobile: {{ s.mobile_content_alignment }};
+
+  --ch-pt-desktop: {{ s.desktop_padding_top }}px;
+  --ch-pb-desktop: {{ s.desktop_padding_bottom }}px;
+  --ch-pl-desktop: {{ s.desktop_padding_left }}px;
+  --ch-pr-desktop: {{ s.desktop_padding_right }}px;
+  --ch-mb-desktop: {{ s.desktop_margin_bottom }}px;
+  --ch-bg-desktop: {{ s.background_color_desktop }};
+  --ch-height-desktop: {{ s.desktop_custom_height }}px;
+  --ch-content-padding-desktop: {{ s.desktop_content_padding }}px;
+  --ch-content-width-desktop: {{ s.desktop_content_width }}%;
+  --ch-content-align-desktop: {{ s.desktop_content_alignment }};
+
+  {% if s.mobile_overlay_enabled %}
+    --ch-overlay-color-mobile: {{ s.mobile_overlay_color }};
+    --ch-overlay-opacity-mobile: {{ s.mobile_overlay_opacity | divided_by: 100.0 }};
+  {% endif %}
+  {% if s.desktop_overlay_enabled %}
+    --ch-overlay-color-desktop: {{ s.desktop_overlay_color }};
+    --ch-overlay-opacity-desktop: {{ s.desktop_overlay_opacity | divided_by: 100.0 }};
+  {% endif %}
+{% endcapture %}
+
+{% stylesheet %}
+  .custom-hero {
+    position: relative;
+    z-index: 1;
+    display: flex;
+  }
+
+  .custom-hero__spacer--mobile {
+    width: 0;
+  }
+
+  .custom-hero__spacer--desktop {
+    display: none;
+    width: 0;
+  }
+
+  .custom-hero__container {
+    width: 100%;
+    padding-top: var(--ch-pt-mobile);
+    padding-bottom: var(--ch-pb-mobile);
+    padding-left: var(--ch-pl-mobile);
+    padding-right: var(--ch-pr-mobile);
+    margin-bottom: var(--ch-mb-mobile);
+    background-color: var(--ch-bg-mobile);
+  }
+
+  .custom-hero__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .custom-hero__media--desktop {
+    display: none;
+  }
+
+  .custom-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .custom-hero__overlay--mobile {
+    opacity: var(--ch-overlay-opacity-mobile, 0);
+  }
+
+  .custom-hero__overlay--mobile.custom-hero__overlay--solid {
+    background: var(--ch-overlay-color-mobile);
+  }
+
+  .custom-hero__overlay--mobile.custom-hero__overlay--top {
+    background: linear-gradient(to bottom, var(--ch-overlay-color-mobile), transparent);
+  }
+
+  .custom-hero__overlay--mobile.custom-hero__overlay--bottom {
+    background: linear-gradient(to top, var(--ch-overlay-color-mobile), transparent);
+  }
+
+  .custom-hero__overlay--mobile.custom-hero__overlay--left {
+    background: linear-gradient(to right, var(--ch-overlay-color-mobile), transparent);
+  }
+
+  .custom-hero__overlay--mobile.custom-hero__overlay--right {
+    background: linear-gradient(to left, var(--ch-overlay-color-mobile), transparent);
+  }
+
+  .custom-hero__overlay--desktop {
+    display: none;
+  }
+
+  .custom-hero__content-wrapper {
+    position: relative;
+    z-index: 2;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+  }
+
+  .custom-hero__content-positioner {
+    height: 100%;
+    display: flex;
+  }
+
+  .custom-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: var(--ch-content-align-mobile);
+    width: var(--ch-content-width-mobile);
+    padding: var(--ch-content-padding-mobile);
+    overflow: hidden;
+  }
+
+  /* Mobile content position */
+  .custom-hero__content-positioner[data-mobile-position="top-left"] { align-items: flex-start; justify-content: flex-start; }
+  .custom-hero__content-positioner[data-mobile-position="top-center"] { align-items: flex-start; justify-content: center; }
+  .custom-hero__content-positioner[data-mobile-position="top-right"] { align-items: flex-start; justify-content: flex-end; }
+  .custom-hero__content-positioner[data-mobile-position="center-left"] { align-items: center; justify-content: flex-start; }
+  .custom-hero__content-positioner[data-mobile-position="center-center"] { align-items: center; justify-content: center; }
+  .custom-hero__content-positioner[data-mobile-position="center-right"] { align-items: center; justify-content: flex-end; }
+  .custom-hero__content-positioner[data-mobile-position="bottom-left"] { align-items: flex-end; justify-content: flex-start; }
+  .custom-hero__content-positioner[data-mobile-position="bottom-center"] { align-items: flex-end; justify-content: center; }
+  .custom-hero__content-positioner[data-mobile-position="bottom-right"] { align-items: flex-end; justify-content: flex-end; }
+
+  /* Mobile height modes */
+  .custom-hero--full-height-mobile { height: 100vh; }
+  .custom-hero__spacer--mobile { height: var(--ch-height-mobile); }
+
+  @media screen and (min-width: 750px) {
+    .custom-hero__container {
+      padding-top: var(--ch-pt-desktop);
+      padding-bottom: var(--ch-pb-desktop);
+      padding-left: var(--ch-pl-desktop);
+      padding-right: var(--ch-pr-desktop);
+      margin-bottom: var(--ch-mb-desktop);
+      background-color: var(--ch-bg-desktop);
+    }
+
+    .custom-hero__media--mobile {
+      display: none;
+    }
+
+    .custom-hero__media--desktop {
+      display: block;
+    }
+
+    .custom-hero__overlay--mobile {
+      display: none;
+    }
+
+    .custom-hero__overlay--desktop {
+      display: block;
+      opacity: var(--ch-overlay-opacity-desktop, 0);
+    }
+
+    .custom-hero__overlay--desktop.custom-hero__overlay--solid {
+      background: var(--ch-overlay-color-desktop);
+    }
+
+    .custom-hero__overlay--desktop.custom-hero__overlay--top {
+      background: linear-gradient(to bottom, var(--ch-overlay-color-desktop), transparent);
+    }
+
+    .custom-hero__overlay--desktop.custom-hero__overlay--bottom {
+      background: linear-gradient(to top, var(--ch-overlay-color-desktop), transparent);
+    }
+
+    .custom-hero__overlay--desktop.custom-hero__overlay--left {
+      background: linear-gradient(to right, var(--ch-overlay-color-desktop), transparent);
+    }
+
+    .custom-hero__overlay--desktop.custom-hero__overlay--right {
+      background: linear-gradient(to left, var(--ch-overlay-color-desktop), transparent);
+    }
+
+    .custom-hero__content {
+      align-items: var(--ch-content-align-desktop);
+      width: var(--ch-content-width-desktop);
+      padding: var(--ch-content-padding-desktop);
+    }
+
+    /* Desktop content position */
+    .custom-hero__content-positioner[data-desktop-position="top-left"] { align-items: flex-start; justify-content: flex-start; }
+    .custom-hero__content-positioner[data-desktop-position="top-center"] { align-items: flex-start; justify-content: center; }
+    .custom-hero__content-positioner[data-desktop-position="top-right"] { align-items: flex-start; justify-content: flex-end; }
+    .custom-hero__content-positioner[data-desktop-position="center-left"] { align-items: center; justify-content: flex-start; }
+    .custom-hero__content-positioner[data-desktop-position="center-center"] { align-items: center; justify-content: center; }
+    .custom-hero__content-positioner[data-desktop-position="center-right"] { align-items: center; justify-content: flex-end; }
+    .custom-hero__content-positioner[data-desktop-position="bottom-left"] { align-items: flex-end; justify-content: flex-start; }
+    .custom-hero__content-positioner[data-desktop-position="bottom-center"] { align-items: flex-end; justify-content: center; }
+    .custom-hero__content-positioner[data-desktop-position="bottom-right"] { align-items: flex-end; justify-content: flex-end; }
+
+    /* Desktop height modes */
+    .custom-hero--full-height-mobile { height: auto; }
+    .custom-hero--full-height-desktop { height: 100vh; }
+    .custom-hero__spacer--mobile { display: none; }
+    .custom-hero__spacer--desktop { display: block; height: var(--ch-height-desktop); }
+  }
+{% endstylesheet %}
+
+<section
+  class="custom-hero{% if s.mobile_defined_height == 'full_height' %} custom-hero--full-height-mobile{% endif %}{% if s.desktop_defined_height == 'full_height' %} custom-hero--full-height-desktop{% endif %}"
+  style="{{ inline_styles | strip_newlines }}"
+  {{ block.shopify_attributes }}
+>
+  {% if s.desktop_defined_height == 'custom' %}
+    <div class="custom-hero__spacer--desktop"></div>
+  {% endif %}
+
+  {% if s.mobile_defined_height == 'custom' %}
+    <div class="custom-hero__spacer--mobile"></div>
+  {% endif %}
+
+  <div class="custom-hero__container">
+    {% if s.desktop_video != blank %}
+      {{
+        s.desktop_video
+        | video_tag:
+          autoplay: true,
+          loop: true,
+          muted: true,
+          playsinline: true,
+          class: 'custom-hero__media custom-hero__media--desktop'
+      }}
+    {% elsif s.desktop_image != blank %}
+      {% render 'image',
+        image: s.desktop_image,
+        class: 'custom-hero__media custom-hero__media--desktop'
+      %}
+    {% endif %}
+
+    {% if s.mobile_video != blank %}
+      {{
+        s.mobile_video
+        | video_tag:
+          autoplay: true,
+          loop: true,
+          muted: true,
+          playsinline: true,
+          class: 'custom-hero__media custom-hero__media--mobile'
+      }}
+    {% elsif s.mobile_image != blank %}
+      {% render 'image',
+        image: s.mobile_image,
+        class: 'custom-hero__media custom-hero__media--mobile'
+      %}
+    {% endif %}
+
+    {% if s.mobile_overlay_enabled %}
+      <div class="custom-hero__overlay custom-hero__overlay--mobile custom-hero__overlay--{{ s.mobile_overlay_direction }}"></div>
+    {% endif %}
+
+    {% if s.desktop_overlay_enabled %}
+      <div class="custom-hero__overlay custom-hero__overlay--desktop custom-hero__overlay--{{ s.desktop_overlay_direction }}"></div>
+    {% endif %}
+
+    <div class="custom-hero__content-wrapper">
+      <div
+        class="custom-hero__content-positioner"
+        data-mobile-position="{{ s.mobile_content_position }}"
+        data-desktop-position="{{ s.desktop_content_position }}"
+      >
+        <div class="custom-hero__content color-{{ s.color_scheme }}">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:settings.desktop_height"
+    },
+    {
+      "type": "select",
+      "id": "desktop_defined_height",
+      "label": "t:settings.desktop_height",
+      "options": [
+        { "value": "custom", "label": "t:options.custom" },
+        { "value": "full_height", "label": "t:options.full_screen" }
+      ],
+      "default": "full_height",
+      "info": "t:info.height_setting"
+    },
+    {
+      "type": "number",
+      "id": "desktop_custom_height",
+      "label": "t:settings.custom_height",
+      "default": 600,
+      "visible_if": "{{ block.settings.desktop_defined_height == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.bg_desktop"
+    },
+    {
+      "type": "color",
+      "id": "background_color_desktop",
+      "label": "t:settings.background_color",
+      "default": "#ffffff",
+      "info": "t:info.bg_color_info"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "t:content.background_image"
+    },
+    {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "t:content.background_video",
+      "info": "t:info.bg_video_info"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_overlay_enabled",
+      "label": "t:settings.overlay_enabled",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "desktop_overlay_color",
+      "label": "t:settings.overlay_color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.desktop_overlay_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_overlay_opacity",
+      "label": "t:settings.overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "%",
+      "visible_if": "{{ block.settings.desktop_overlay_enabled }}"
+    },
+    {
+      "type": "select",
+      "id": "desktop_overlay_direction",
+      "label": "t:settings.overlay_direction",
+      "default": "solid",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "top", "label": "t:options.top" },
+        { "value": "bottom", "label": "t:options.bottom" },
+        { "value": "left", "label": "t:options.left" },
+        { "value": "right", "label": "t:options.right" }
+      ],
+      "visible_if": "{{ block.settings.desktop_overlay_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_content"
+    },
+    {
+      "type": "range",
+      "id": "desktop_content_width",
+      "label": "t:settings.content_width",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "%",
+      "info": "t:info.content_width"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "t:settings.content_position",
+      "options": [
+        { "value": "top-left", "label": "t:options.top_left" },
+        { "value": "top-center", "label": "t:options.top_center" },
+        { "value": "top-right", "label": "t:options.top_right" },
+        { "value": "center-left", "label": "t:options.center_left" },
+        { "value": "center-center", "label": "t:options.center_center" },
+        { "value": "center-right", "label": "t:options.center_right" },
+        { "value": "bottom-left", "label": "t:options.bottom_left" },
+        { "value": "bottom-center", "label": "t:options.bottom_center" },
+        { "value": "bottom-right", "label": "t:options.bottom_right" }
+      ],
+      "default": "top-left",
+      "info": "t:info.content_position"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_alignment",
+      "label": "t:settings.content_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "flex-start",
+      "info": "t:info.content_alignment"
+    },
+    {
+      "type": "number",
+      "id": "desktop_content_padding",
+      "label": "t:settings.padding",
+      "default": 0,
+      "info": "t:info.content_padding"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_styles"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_top",
+      "label": "t:settings.padding_top",
+      "default": 64,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_bottom",
+      "label": "t:settings.padding_bottom",
+      "default": 64,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_left",
+      "label": "t:settings.left_padding",
+      "default": 32,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "desktop_padding_right",
+      "label": "t:settings.right_padding",
+      "default": 32,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "desktop_margin_bottom",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "header",
+      "content": "t:settings.mobile_height"
+    },
+    {
+      "type": "select",
+      "id": "mobile_defined_height",
+      "label": "t:settings.mobile_height",
+      "options": [
+        { "value": "custom", "label": "t:options.custom" },
+        { "value": "full_height", "label": "t:options.full_screen" }
+      ],
+      "default": "full_height",
+      "info": "t:info.height_setting"
+    },
+    {
+      "type": "number",
+      "id": "mobile_custom_height",
+      "label": "t:settings.custom_height",
+      "default": 600,
+      "visible_if": "{{ block.settings.mobile_defined_height == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.bg_mobile"
+    },
+    {
+      "type": "color",
+      "id": "background_color_mobile",
+      "label": "t:settings.background_color",
+      "default": "#ffffff",
+      "info": "t:info.bg_color_info"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:content.background_image"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "t:content.background_video",
+      "info": "t:info.bg_video_info"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_overlay_enabled",
+      "label": "t:settings.overlay_enabled",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "mobile_overlay_color",
+      "label": "t:settings.overlay_color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.mobile_overlay_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_overlay_opacity",
+      "label": "t:settings.overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "%",
+      "visible_if": "{{ block.settings.mobile_overlay_enabled }}"
+    },
+    {
+      "type": "select",
+      "id": "mobile_overlay_direction",
+      "label": "t:settings.overlay_direction",
+      "default": "solid",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "top", "label": "t:options.top" },
+        { "value": "bottom", "label": "t:options.bottom" },
+        { "value": "left", "label": "t:options.left" },
+        { "value": "right", "label": "t:options.right" }
+      ],
+      "visible_if": "{{ block.settings.mobile_overlay_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_content"
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_width",
+      "label": "t:settings.content_width",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 100,
+      "unit": "%",
+      "info": "t:info.content_width"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "label": "t:settings.content_position",
+      "options": [
+        { "value": "top-left", "label": "t:options.top_left" },
+        { "value": "top-center", "label": "t:options.top_center" },
+        { "value": "top-right", "label": "t:options.top_right" },
+        { "value": "center-left", "label": "t:options.center_left" },
+        { "value": "center-center", "label": "t:options.center_center" },
+        { "value": "center-right", "label": "t:options.center_right" },
+        { "value": "bottom-left", "label": "t:options.bottom_left" },
+        { "value": "bottom-center", "label": "t:options.bottom_center" },
+        { "value": "bottom-right", "label": "t:options.bottom_right" }
+      ],
+      "default": "top-left",
+      "info": "t:info.content_position"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_alignment",
+      "label": "t:settings.content_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.right" }
+      ],
+      "default": "flex-start",
+      "info": "t:info.content_alignment"
+    },
+    {
+      "type": "number",
+      "id": "mobile_content_padding",
+      "label": "t:settings.padding",
+      "default": 0,
+      "info": "t:info.content_padding"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_styles"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_top",
+      "label": "t:settings.padding_top",
+      "default": 32,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_bottom",
+      "label": "t:settings.padding_bottom",
+      "default": 32,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_left",
+      "label": "t:settings.left_padding",
+      "default": 16,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "mobile_padding_right",
+      "label": "t:settings.right_padding",
+      "default": 16,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "mobile_margin_bottom",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "info": "t:info.content_appearance"
+    }
+  ],
+  "blocks": [{ "type": "@theme" }],
+  "presets": [
+    {
+      "name": "Hero",
+      "category": "Banner",
+      "settings": {
+        "desktop_defined_height": "custom",
+        "mobile_defined_height": "custom",
+        "desktop_padding_top": 64,
+        "desktop_padding_bottom": 64,
+        "mobile_padding_top": 32,
+        "mobile_padding_bottom": 32
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p>Use this space to add a short description for your hero section.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
