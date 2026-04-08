@@ -71,6 +71,9 @@
   --gs-pl-desktop: {{ desktop_padding_left }}px;
   --gs-pr-desktop: {{ desktop_padding_right }}px;
   --gs-mb-desktop: {{ desktop_margin_bottom }}px;
+  {% if content_max_width == 'custom' %}
+    --gs-custom-max-width: {{ section_settings.content_custom_max_width }}px;
+  {% endif %}
 {% endcapture %}
 
 {% stylesheet %}
@@ -100,11 +103,12 @@
     width: 100%;
   }
 
-  .generic-section__inner--full  { max-width: 100%; }
-  .generic-section__inner--768   { max-width: 768px; }
-  .generic-section__inner--1024  { max-width: 1024px; }
-  .generic-section__inner--1280  { max-width: 1280px; }
-  .generic-section__inner--1920  { max-width: 1920px; }
+  .generic-section__inner--full   { max-width: 100%; }
+  .generic-section__inner--768    { max-width: 768px; }
+  .generic-section__inner--1024   { max-width: 1024px; }
+  .generic-section__inner--1280   { max-width: 1280px; }
+  .generic-section__inner--1920   { max-width: 1920px; }
+  .generic-section__inner--custom { max-width: var(--gs-custom-max-width); }
 {% endstylesheet %}
 
 <section
@@ -127,16 +131,25 @@
       "info": "Maximum width of the inner content container. 'Full' stretches content to the section edges.",
       "default": "full",
       "options": [
-        { "value": "full", "label": "Full" },
+        { "value": "full", "label": "t:options.full" },
         { "value": "768",  "label": "768px" },
         { "value": "1024", "label": "1024px" },
         { "value": "1280", "label": "1280px" },
-        { "value": "1920", "label": "1920px" }
+        { "value": "1920", "label": "1920px" },
+        { "value": "custom", "label": "t:options.custom" }
       ]
     },
     {
+      "type": "number",
+      "id": "content_custom_max_width",
+      "label": "t:settings.custom_max_width",
+      "default": 1440,
+      "info": "t:info.custom_max_width",
+      "visible_if": "{{ section.settings.content_max_width == 'custom' }}"
+    },
+    {
       "type": "header",
-      "content": "Desktop styles"
+      "content": "t:content.desktop_styles"
     },
     {
       "type": "number",
@@ -175,7 +188,7 @@
     },
     {
       "type": "header",
-      "content": "Mobile styles"
+      "content": "t:content.mobile_styles"
     },
     {
       "type": "number",

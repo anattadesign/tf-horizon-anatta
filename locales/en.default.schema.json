@@ -234,6 +234,7 @@
     "content_padding": "Inner padding of the content area in pixels",
     "content_position": "Position of the content area within the section",
     "content_width": "Width of the content area",
+    "custom_max_width": "Enter a custom max-width value in pixels",
     "custom_heading": "Custom heading",
     "custom_liquid": "Add app snippets or other code to create advanced customizations. [Learn more](https://shopify.dev/docs/api/liquid)",
     "edit_presets_in_theme_settings": "Edit presets in [theme settings](/editor?context=theme&category=typography)",
@@ -861,6 +862,7 @@
     "cover_image_size": "Cover image size",
     "currency_code": "Currency code",
     "custom_height": "Custom height",
+    "custom_max_width": "Custom max width (px)",
     "custom_minimum_height": "Custom minimum height",
     // Checkbox to enable separate size settings for mobile devices
     "custom_mobile_size": "Custom mobile size",
