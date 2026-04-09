@@ -1,0 +1,211 @@
+{% doc %}
+  Block: Custom Border
+
+  Description:
+    A responsive divider/border block with independent desktop and mobile
+    controls for thickness, width, and margin. Supports solid, dashed, and
+    dotted styles, optional color override, and corner radius.
+
+  Settings:
+    Style:
+    - style (select): solid, dashed, or dotted. Default: "solid"
+    - corner_radius (select): square or rounded. Visible when thickness > 1.
+    - color (color): Custom border color. Falls back to theme border color.
+
+    Desktop (750px and above):
+    - thickness_desktop (range): Border thickness 0.5–5px. Default: 1
+    - width_desktop (range): Width as percentage 5–100%. Default: 100
+    - margin_top_desktop (number): Top margin in px. Default: 0
+    - margin_bottom_desktop (number): Bottom margin in px. Default: 0
+
+    Mobile (below 750px):
+    - thickness_mobile (range): Border thickness 0.5–5px. Default: 1
+    - width_mobile (range): Width as percentage 5–100%. Default: 100
+    - margin_top_mobile (number): Top margin in px. Default: 0
+    - margin_bottom_mobile (number): Bottom margin in px. Default: 0
+
+  Notes:
+    - Desktop breakpoint is 750px (Horizon convention).
+    - Inspired by the _divider block but with responsive controls.
+    - Corner radius uses theme's --style-border-radius-sm token.
+{% enddoc %}
+
+{% liquid
+  assign s = block.settings
+  assign is_rounded = false
+  if s.corner_radius == 'rounded'
+    assign is_rounded = true
+  endif
+%}
+
+{% capture styles %}
+  --cb-thickness-desktop: {{ s.thickness_desktop }}px;
+  --cb-thickness-mobile: {{ s.thickness_mobile }}px;
+  --cb-width-desktop: {{ s.width_desktop }}%;
+  --cb-width-mobile: {{ s.width_mobile }}%;
+  --cb-mt-desktop: {{ s.margin_top_desktop | default: 0 }}px;
+  --cb-mb-desktop: {{ s.margin_bottom_desktop | default: 0 }}px;
+  --cb-mt-mobile: {{ s.margin_top_mobile | default: 0 }}px;
+  --cb-mb-mobile: {{ s.margin_bottom_mobile | default: 0 }}px;
+  --cb-style: {{ s.style }};
+  {% if s.color != blank %}
+    --cb-color: {{ s.color }};
+  {% endif %}
+{% endcapture %}
+
+<div
+  class="custom-border{% if is_rounded %} custom-border--rounded{% endif %}"
+  style="{{ styles | strip_newlines | strip }}"
+  {{ block.shopify_attributes }}
+>
+  <span class="custom-border__line"></span>
+</div>
+
+{% stylesheet %}
+  .custom-border {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: var(--horizontal-alignment, center);
+    margin-top: var(--cb-mt-mobile);
+    margin-bottom: var(--cb-mb-mobile);
+  }
+
+  .custom-border__line {
+    flex-basis: var(--cb-width-mobile);
+    border-bottom: var(--cb-thickness-mobile) var(--cb-style) var(--cb-color, var(--color-border));
+  }
+
+  .custom-border--rounded .custom-border__line {
+    border-radius: var(--style-border-radius-sm);
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-border {
+      margin-top: var(--cb-mt-desktop);
+      margin-bottom: var(--cb-mb-desktop);
+    }
+
+    .custom-border__line {
+      flex-basis: var(--cb-width-desktop);
+      border-bottom-width: var(--cb-thickness-desktop);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.custom_border",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:settings.border_style",
+      "options": [
+        { "value": "solid", "label": "t:options.solid" },
+        { "value": "dashed", "label": "t:options.dashed" },
+        { "value": "dotted", "label": "t:options.dotted" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "select",
+      "id": "corner_radius",
+      "label": "t:settings.border_radius",
+      "options": [
+        { "value": "square", "label": "t:options.square" },
+        { "value": "rounded", "label": "t:options.rounded" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:settings.color"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_styles"
+    },
+    {
+      "type": "range",
+      "id": "thickness_desktop",
+      "label": "t:settings.thickness",
+      "min": 0.5,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "width_desktop",
+      "label": "t:settings.length",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "number",
+      "id": "margin_top_desktop",
+      "label": "t:settings.margin_top",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_desktop",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_styles"
+    },
+    {
+      "type": "range",
+      "id": "thickness_mobile",
+      "label": "t:settings.thickness",
+      "min": 0.5,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "width_mobile",
+      "label": "t:settings.length",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "number",
+      "id": "margin_top_mobile",
+      "label": "t:settings.margin_top",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_mobile",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.custom_border",
+      "category": "t:categories.layout"
+    }
+  ]
+}
+{% endschema %}

@@ -325,6 +325,7 @@
     "content_grid": "Content grid",
     "copyright": "Copyright",
     "count": "Count",
+    "custom_border": "Custom Border",
     "custom_section": "Custom section",
     "description": "Description",
     // Block name for informational content containers
@@ -547,6 +548,7 @@
     "dairy": "Dairy",
     // Icon option for dietary restriction indication
     "dairy_free": "Dairy free",
+    "dashed": "Dashed",
     "default": "Default",
     "diamond": "Diamond",
     "discord": "Discord",
