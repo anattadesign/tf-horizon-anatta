@@ -1,0 +1,352 @@
+{% doc %}
+  Block: Custom Icon
+
+  Description:
+    A responsive icon block with preset SVG icons or custom image upload,
+    independent desktop/mobile sizing, rotation, color override (inherit,
+    color scheme, or custom), margin controls, and optional link wrapper.
+
+  Settings:
+    Icon:
+    - icon (select): Preset icon grouped by category (General, Food & Dietary,
+      Fashion & Care, Commerce, Nature & Eco, Social) or "Custom" to upload
+      an image. Default: "price_tag"
+    - image_upload (image_picker): Custom image icon. Visible when icon is "custom".
+    - rotate (select): Rotation in 45° increments (0° to 180°, -45° to -135°). Default: "0"
+
+    Desktop size (750px and above):
+    - width_desktop (range): Icon width 12–200px. Default: 24
+    - margin_top_desktop (number): Top margin in px. Default: 0
+    - margin_bottom_desktop (number): Bottom margin in px. Default: 0
+
+    Mobile size (below 750px):
+    - width_mobile (range): Icon width 12–200px. Default: 24
+    - margin_top_mobile (number): Top margin in px. Default: 0
+    - margin_bottom_mobile (number): Bottom margin in px. Default: 0
+
+    Color:
+    - color_source (select): inherit, color_scheme, or custom. Default: "inherit"
+    - color_scheme (color_scheme): Visible when color_source is "color_scheme".
+    - color (color): Custom color picker. Visible when color_source is "custom".
+
+    Link:
+    - link (url): Optional link wrapping the icon.
+    - open_in_new_tab (checkbox): Open link in new tab. Default: false
+
+  Notes:
+    - Desktop breakpoint is 750px (Horizon convention).
+    - Icon options use Shopify's group attribute for organized dropdown categories.
+    - When "Custom" is selected, the icon name is mapped to "none" internally so
+      the icon-or-image snippet renders the uploaded image.
+    - Rotation is applied via CSS transform on the icon media element.
+    - Custom color only applies when color_source is set to "custom".
+{% enddoc %}
+
+{% liquid
+  assign s = block.settings
+  assign icon_name = s.icon
+  assign icon_image = nil
+  if icon_name == 'custom'
+    assign icon_name = 'none'
+    assign icon_image = s.image_upload
+  endif
+%}
+
+{% capture icon_element %}
+  {% render 'icon-or-image',
+    icon: icon_name,
+    image_upload: icon_image,
+    width: s.width_desktop,
+    class_name: 'custom-icon__media',
+    attributes: block.shopify_attributes
+  %}
+{% endcapture %}
+
+{% capture styles %}
+  --ci-width-desktop: {{ s.width_desktop }}px;
+  --ci-width-mobile: {{ s.width_mobile }}px;
+  --ci-mt-desktop: {{ s.margin_top_desktop | default: 0 }}px;
+  --ci-mb-desktop: {{ s.margin_bottom_desktop | default: 0 }}px;
+  --ci-mt-mobile: {{ s.margin_top_mobile | default: 0 }}px;
+  --ci-mb-mobile: {{ s.margin_bottom_mobile | default: 0 }}px;
+  {% if s.rotate != '0' %}
+    --ci-rotate: {{ s.rotate }}deg;
+  {% endif %}
+  {% if s.color != blank %}
+    --ci-color: {{ s.color }};
+  {% endif %}
+{% endcapture %}
+
+{% capture classes %}
+  custom-icon
+  {% if s.color_source == 'color_scheme' %}color-{{ s.color_scheme }}{% endif %}
+  {% if s.color_source == 'custom' and s.color != blank %}custom-icon--custom-color{% endif %}
+{% endcapture %}
+
+<div
+  class="{{ classes | strip_newlines | strip }}"
+  style="{{ styles | strip_newlines | strip }}"
+>
+  {%- if s.link != blank -%}
+    <a
+      href="{{ s.link }}"
+      class="custom-icon__link"
+      {% if s.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+    >
+      {{ icon_element }}
+    </a>
+  {%- else -%}
+    {{ icon_element }}
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .custom-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: var(--horizontal-alignment, inline-start);
+    margin-top: var(--ci-mt-mobile);
+    margin-bottom: var(--ci-mb-mobile);
+  }
+
+  .custom-icon__media {
+    width: var(--ci-width-mobile);
+    height: auto;
+    transform: rotate(var(--ci-rotate, 0deg));
+  }
+
+  .custom-icon__link {
+    display: inline-flex;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .custom-icon--custom-color,
+  .custom-icon--custom-color .custom-icon__media {
+    color: var(--ci-color);
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-icon {
+      margin-top: var(--ci-mt-desktop);
+      margin-bottom: var(--ci-mb-desktop);
+    }
+
+    .custom-icon__media {
+      width: var(--ci-width-desktop);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.custom_icon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:settings.icon",
+      "options": [
+        { "value": "custom", "label": "t:options.custom", "group": "t:options.group_custom" },
+        { "value": "3d-model", "label": "t:options.3d_model", "group": "t:options.group_general" },
+        { "value": "arrow", "label": "t:options.arrow", "group": "t:options.group_general" },
+        { "value": "chat_bubble", "label": "t:options.chat_bubble", "group": "t:options.group_general" },
+        { "value": "check_box", "label": "t:options.check_box", "group": "t:options.group_general" },
+        { "value": "clipboard", "label": "t:options.clipboard", "group": "t:options.group_general" },
+        { "value": "eye", "label": "t:options.eye", "group": "t:options.group_general" },
+        { "value": "heart", "label": "t:options.heart", "group": "t:options.group_general" },
+        { "value": "lightning_bolt", "label": "t:options.lightning_bolt", "group": "t:options.group_general" },
+        { "value": "lock", "label": "t:options.lock", "group": "t:options.group_general" },
+        { "value": "map_pin", "label": "t:options.map_pin", "group": "t:options.group_general" },
+        { "value": "plane", "label": "t:options.plane", "group": "t:options.group_general" },
+        { "value": "question_mark", "label": "t:options.question_mark", "group": "t:options.group_general" },
+        { "value": "silhouette", "label": "t:options.silhouette", "group": "t:options.group_general" },
+        { "value": "star", "label": "t:options.star", "group": "t:options.group_general" },
+        { "value": "stopwatch", "label": "t:options.stopwatch", "group": "t:options.group_general" },
+        { "value": "apple", "label": "t:options.apple", "group": "t:options.group_food_dietary" },
+        { "value": "banana", "label": "t:options.banana", "group": "t:options.group_food_dietary" },
+        { "value": "bottle", "label": "t:options.bottle", "group": "t:options.group_food_dietary" },
+        { "value": "carrot", "label": "t:options.carrot", "group": "t:options.group_food_dietary" },
+        { "value": "dairy", "label": "t:options.dairy", "group": "t:options.group_food_dietary" },
+        { "value": "dairy_free", "label": "t:options.dairy_free", "group": "t:options.group_food_dietary" },
+        { "value": "gluten_free", "label": "t:options.gluten_free", "group": "t:options.group_food_dietary" },
+        { "value": "nut_free", "label": "t:options.nut_free", "group": "t:options.group_food_dietary" },
+        { "value": "pepper", "label": "t:options.pepper", "group": "t:options.group_food_dietary" },
+        { "value": "serving_dish", "label": "t:options.serving_dish", "group": "t:options.group_food_dietary" },
+        { "value": "dryer", "label": "t:options.dryer", "group": "t:options.group_fashion_care" },
+        { "value": "iron", "label": "t:options.iron", "group": "t:options.group_fashion_care" },
+        { "value": "leather", "label": "t:options.leather", "group": "t:options.group_fashion_care" },
+        { "value": "lipstick", "label": "t:options.lipstick", "group": "t:options.group_fashion_care" },
+        { "value": "pants", "label": "t:options.pants", "group": "t:options.group_fashion_care" },
+        { "value": "perfume", "label": "t:options.perfume", "group": "t:options.group_fashion_care" },
+        { "value": "shirt", "label": "t:options.shirt", "group": "t:options.group_fashion_care" },
+        { "value": "shoe", "label": "t:options.shoe", "group": "t:options.group_fashion_care" },
+        { "value": "washing", "label": "t:options.washing", "group": "t:options.group_fashion_care" },
+        { "value": "box", "label": "t:options.box", "group": "t:options.group_commerce" },
+        { "value": "price_tag", "label": "t:options.price_tag", "group": "t:options.group_commerce" },
+        { "value": "return", "label": "t:options.return", "group": "t:options.group_commerce" },
+        { "value": "ruler", "label": "t:options.ruler", "group": "t:options.group_commerce" },
+        { "value": "truck", "label": "t:options.truck", "group": "t:options.group_commerce" },
+        { "value": "fire", "label": "t:options.fire", "group": "t:options.group_nature_eco" },
+        { "value": "leaf", "label": "t:options.leaf", "group": "t:options.group_nature_eco" },
+        { "value": "paw_print", "label": "t:options.paw_print", "group": "t:options.group_nature_eco" },
+        { "value": "plant", "label": "t:options.plant", "group": "t:options.group_nature_eco" },
+        { "value": "recycle", "label": "t:options.recycle", "group": "t:options.group_nature_eco" },
+        { "value": "snowflake", "label": "t:options.snowflake", "group": "t:options.group_nature_eco" },
+        { "value": "bluesky", "label": "t:options.social_bluesky", "group": "t:options.group_social" },
+        { "value": "discord", "label": "t:options.social_discord", "group": "t:options.group_social" },
+        { "value": "facebook", "label": "t:options.social_facebook", "group": "t:options.group_social" },
+        { "value": "instagram", "label": "t:options.social_instagram", "group": "t:options.group_social" },
+        { "value": "linkedin", "label": "t:options.social_linkedin", "group": "t:options.group_social" },
+        { "value": "mastodon", "label": "t:options.social_mastodon", "group": "t:options.group_social" },
+        { "value": "pinterest", "label": "t:options.social_pinterest", "group": "t:options.group_social" },
+        { "value": "reddit", "label": "t:options.social_reddit", "group": "t:options.group_social" },
+        { "value": "snapchat", "label": "t:options.social_snapchat", "group": "t:options.group_social" },
+        { "value": "spotify", "label": "t:options.social_spotify", "group": "t:options.group_social" },
+        { "value": "telegram", "label": "t:options.social_telegram", "group": "t:options.group_social" },
+        { "value": "threads", "label": "t:options.social_threads", "group": "t:options.group_social" },
+        { "value": "tiktok", "label": "t:options.social_tiktok", "group": "t:options.group_social" },
+        { "value": "tumblr", "label": "t:options.social_tumblr", "group": "t:options.group_social" },
+        { "value": "twitch", "label": "t:options.social_twitch", "group": "t:options.group_social" },
+        { "value": "twitter", "label": "t:options.social_twitter", "group": "t:options.group_social" },
+        { "value": "vimeo", "label": "t:options.social_vimeo", "group": "t:options.group_social" },
+        { "value": "whatsapp", "label": "t:options.social_whatsapp", "group": "t:options.group_social" },
+        { "value": "youtube", "label": "t:options.social_youtube", "group": "t:options.group_social" }
+      ],
+      "default": "price_tag"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_upload",
+      "label": "t:settings.image_icon",
+      "visible_if": "{{ block.settings.icon == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "rotate",
+      "label": "t:settings.rotation",
+      "options": [
+        { "value": "0", "label": "0°" },
+        { "value": "45", "label": "45°" },
+        { "value": "90", "label": "90°" },
+        { "value": "135", "label": "135°" },
+        { "value": "180", "label": "180°" },
+        { "value": "-135", "label": "-135°" },
+        { "value": "-90", "label": "-90°" },
+        { "value": "-45", "label": "-45°" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_size"
+    },
+    {
+      "type": "range",
+      "id": "width_desktop",
+      "label": "t:settings.width",
+      "min": 12,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "number",
+      "id": "margin_top_desktop",
+      "label": "t:settings.margin_top",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_desktop",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_size"
+    },
+    {
+      "type": "range",
+      "id": "width_mobile",
+      "label": "t:settings.width",
+      "min": 12,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "number",
+      "id": "margin_top_mobile",
+      "label": "t:settings.margin_top",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_mobile",
+      "label": "t:settings.margin_bottom",
+      "default": 0,
+      "info": "t:info.spacing_value"
+    },
+    {
+      "type": "header",
+      "content": "t:settings.color"
+    },
+    {
+      "type": "select",
+      "id": "color_source",
+      "label": "t:settings.color_source",
+      "options": [
+        { "value": "inherit", "label": "t:options.inherit" },
+        { "value": "color_scheme", "label": "t:options.color_scheme" },
+        { "value": "custom", "label": "t:options.custom_color" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.color_source == 'color_scheme' }}"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:settings.color",
+      "visible_if": "{{ block.settings.color_source == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:settings.link"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "t:settings.open_new_tab",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.custom_icon",
+      "category": "t:categories.basic",
+      "settings": {
+        "icon": "price_tag"
+      }
+    }
+  ]
+}
+{% endschema %}
