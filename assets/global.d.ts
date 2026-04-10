@@ -37,6 +37,8 @@ declare global {
 
   interface Window {
     Shopify: Shopify;
+    Swiper: any;
+    SwiperModules: any[];
   }
 
   declare const Shopify: Shopify;
@@ -57,7 +59,7 @@ declare global {
       element: Element,
       options?: {
         focusOnPlay?: boolean;
-      }
+      },
     ): ModelViewer;
     play(): void;
     pause(): void;

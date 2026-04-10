@@ -1,0 +1,51 @@
+{% doc %}
+  Block: Custom Carousel Slide
+
+  Description:
+    A single slide container for the Custom Carousel. Wraps child blocks
+    and ensures proper sizing within the Swiper layout.
+
+  Usage example:
+    {% content_for 'block', type: '_custom-carousel-slide', id: 'slide-1' %}
+
+  Notes:
+    - Must be placed inside a Custom Carousel block.
+    - Accepts any theme or app blocks as children.
+{% enddoc %}
+
+{% stylesheet %}
+  .custom-carousel-slide {
+    height: auto;
+  }
+
+  .custom-carousel-slide__content {
+    width: 100%;
+    height: 100%;
+  }
+{% endstylesheet %}
+
+<div
+  class="swiper-slide custom-carousel-slide"
+  {{ block.shopify_attributes }}
+>
+  <div class="custom-carousel-slide__content">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.slide",
+  "tag": null,
+  "blocks": [
+    {
+     "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [],
+  "presets": [{"name": "t:names.slide"}]
+}
+{% endschema %}

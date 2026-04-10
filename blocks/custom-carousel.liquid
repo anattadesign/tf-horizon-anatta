@@ -1,0 +1,347 @@
+{% doc %}
+  Block: Custom Carousel
+
+  Description:
+    A Swiper-powered carousel container. Place Custom Carousel Slide blocks
+    inside to define each slide. Supports pagination dots, overlay arrows,
+    and external arrows (via the Carousel Arrows block as a sibling).
+
+  Settings:
+    Desktop (750px and above):
+    - columns (number): Slides visible at once. Default: 4
+    - gap (range 0–100): Space between slides in px. Default: 16
+    - margin_bottom_desktop (number): Bottom margin in px. Default: 0
+
+    Mobile (below 750px):
+    - columns_mobile (number): Slides visible at once. Default: 1
+    - gap_mobile (range 0–100): Space between slides in px. Default: 8
+    - margin_bottom_mobile (number): Bottom margin in px. Default: 0
+
+    Advanced:
+    - infinite (checkbox): Enable infinite loop. Default: false
+    - autoplay (checkbox): Enable autoplay. Default: false
+    - autoplay_speed (range 3–10): Autoplay delay in seconds. Default: 5
+    - pagination_style (select): "none" or "dots". Default: "dots"
+    - arrows_type (select): "none", "overlay", or "external". Default: "overlay"
+
+    Appearance:
+    - inherit_color_scheme (checkbox): Inherit parent color scheme. Default: true
+    - color_scheme: Color scheme when not inheriting
+
+  Usage example:
+    1. Add a "Generic Section" to the page.
+    2. Inside it, add a "Block Carousel" block.
+    3. Add "Slide" blocks inside the carousel.
+    4. Add content blocks (product cards, images, etc.) inside each slide.
+    5. For external arrows, add a "Carousel Arrows" block as a sibling.
+
+  Notes:
+    - Only accepts _custom-carousel-slide blocks as direct children.
+    - External arrows must be a sibling block in the same section to
+      share the section.id for linking.
+    - Swiper JS + CSS are loaded from CDN on demand.
+{% enddoc %}
+
+{% liquid
+  assign s = block.settings
+  assign color_scheme_class = ''
+  if s.inherit_color_scheme == false
+    assign color_scheme_class = 'color-' | append: s.color_scheme
+  endif
+
+  assign carousel_id = block.id
+  assign mb_mobile = s.margin_bottom_mobile | default: 0
+  assign mb_desktop = s.margin_bottom_desktop | default: 0
+
+  capture swiper_settings
+    echo '{'
+    echo '"slidesPerViewDesktop": ' | append: s.columns | append: ','
+    echo '"spaceBetweenDesktop": ' | append: s.gap | append: ','
+    echo '"slidesPerViewMobile": ' | append: s.columns_mobile | append: ','
+    echo '"spaceBetweenMobile": ' | append: s.gap_mobile | append: ','
+    echo '"loop": ' | append: s.infinite | append: ','
+    echo '"autoplay": ' | append: s.autoplay | append: ','
+    echo '"autoplaySpeed": ' | append: s.autoplay_speed | append: ','
+    echo '"pagination": ' | append: true | append: ','
+    echo '"navigation": ' | append: true | append: ','
+    if s.arrows_type == 'external'
+      echo '"customArrows": true,'
+      echo '"nextEl": "#next-' | append: section.id | append: '",'
+      echo '"prevEl": "#prev-' | append: section.id | append: '"'
+    else
+      echo '"customArrows": false'
+    endif
+    echo '}'
+  endcapture
+%}
+
+{% stylesheet %}
+  .custom-carousel {
+    display: block;
+    width: 100%;
+    margin-bottom: var(--cc-mb-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-carousel {
+      margin-bottom: var(--cc-mb-desktop);
+    }
+  }
+
+  .custom-carousel .swiper {
+    width: 100%;
+    position: relative;
+  }
+
+  .custom-carousel .swiper-pagination {
+    position: relative !important;
+    margin-top: 1.5rem !important;
+    bottom: 0 !important;
+  }
+
+  .custom-carousel .swiper-pagination-bullet-active {
+    background: var(--color-foreground) !important;
+  }
+
+  .custom-carousel .swiper-button-prev,
+  .custom-carousel .swiper-button-next {
+    color: var(--color-foreground) !important;
+    --swiper-navigation-size: 24px;
+  }
+
+  .custom-carousel .swiper-button-prev svg,
+  .custom-carousel .swiper-button-next svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .custom-carousel .swiper-button-prev {
+    transform: rotate(180deg);
+  }
+{% endstylesheet %}
+
+<carousel-component
+  id="{{ carousel_id }}"
+  class="custom-carousel {{ color_scheme_class }}"
+  style="--cc-mb-mobile: {{ mb_mobile }}px; --cc-mb-desktop: {{ mb_desktop }}px;"
+  data-settings='{{ swiper_settings }}'
+  {{ block.shopify_attributes }}
+>
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      {% content_for 'blocks' %}
+    </div>
+
+    {% if s.pagination_style != 'none' %}
+      <div class="swiper-pagination"></div>
+    {% endif %}
+
+    {% if s.arrows_type == 'overlay' %}
+      <div class="swiper-button-prev">
+        {{- 'icon-arrow.svg' | inline_asset_content -}}
+      </div>
+      <div class="swiper-button-next">
+        {{- 'icon-arrow.svg' | inline_asset_content -}}
+      </div>
+    {% endif %}
+  </div>
+</carousel-component>
+
+<script
+  src="{{ 'carousel-component.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+{% schema %}
+{
+  "name": "Block Carousel",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_custom-carousel-slide"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.desktop_styles"
+    },
+    {
+      "type": "number",
+      "id": "columns",
+      "label": "t:settings.columns",
+      "default": 4,
+      "info": "t:info.columns_peek"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_desktop",
+      "label": "t:settings.margin_bottom_desktop",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_styles"
+    },
+    {
+      "type": "number",
+      "id": "columns_mobile",
+      "label": "t:settings.columns",
+      "default": 1,
+      "info": "t:info.columns_peek"
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_mobile",
+      "label": "t:settings.margin_bottom_mobile",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "infinite",
+      "label": "t:settings.loop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:settings.autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "t:settings.speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "info": "t:info.autoplay_speed",
+      "visible_if": "{{ block.settings.autoplay }}"
+    },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "t:settings.pagination",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "dots", "label": "t:options.dots" }
+      ],
+      "default": "dots"
+    },
+    {
+      "type": "select",
+      "id": "arrows_type",
+      "label": "t:settings.arrows_type",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "overlay", "label": "t:options.overlay" },
+        { "value": "external", "label": "t:options.external" }
+      ],
+      "default": "overlay"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Carousel",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "_custom-carousel-slide",
+          "blocks": [
+            {
+              "type": "product-card",
+              "blocks": [
+                { "type": "_product-card-gallery" },
+                { "type": "product-title" },
+                { "type": "price" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "_custom-carousel-slide",
+          "blocks": [
+            {
+              "type": "product-card",
+              "blocks": [
+                { "type": "_product-card-gallery" },
+                { "type": "product-title" },
+                { "type": "price" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "_custom-carousel-slide",
+          "blocks": [
+            {
+              "type": "product-card",
+              "blocks": [
+                { "type": "_product-card-gallery" },
+                { "type": "product-title" },
+                { "type": "price" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "_custom-carousel-slide",
+          "blocks": [
+            {
+              "type": "product-card",
+              "blocks": [
+                { "type": "_product-card-gallery" },
+                { "type": "product-title" },
+                { "type": "price" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,524 @@
+{% doc %}
+  Block: Custom Image
+
+  Description:
+    A responsive image block with separate desktop and mobile images, aspect
+    ratios, width, and height controls. If no mobile image is provided, the
+    desktop image is used on all breakpoints. Supports an optional link
+    wrapper, border styling, and padding.
+
+  Settings:
+    Content:
+    - image (image_picker): Desktop image.
+    - image_mobile (image_picker): Mobile image. Falls back to desktop if empty.
+    - link (url): Optional link wrapping the image.
+
+    Desktop size (750px and above):
+    - image_ratio (select): adapt, portrait, square, or landscape. Default: "adapt"
+    - width (select): fit-content, fill, or custom. Default: "fill"
+    - custom_width (range): 0–100%. Visible when width is custom. Default: 100
+    - height (select): fit or fill. Visible when image_ratio is adapt. Default: "fit"
+
+    Mobile size (below 750px):
+    - image_ratio_mobile (select): adapt, portrait, square, or landscape. Default: "adapt"
+    - width_mobile (select): fit-content, fill, or custom. Default: "fill"
+    - custom_width_mobile (range): 0–100%. Visible when width_mobile is custom. Default: 100
+    - height_mobile (select): fit or fill. Visible when image_ratio_mobile is adapt. Default: "fit"
+
+    Borders:
+    - border (select): none or solid. Default: "none"
+    - border_width (range): 0–100px. Visible when border is not none. Default: 1
+    - border_opacity (range): 0–100%. Visible when border is not none. Default: 100
+    - border_radius (range): 0–100px. Default: 0
+
+    Margin:
+    - margin_bottom_desktop (number): Desktop bottom margin in px. Default: 0
+    - margin_bottom_mobile (number): Mobile bottom margin in px. Default: 0
+
+    Padding:
+    - padding-block-start (range): Top padding, 0–100px. Default: 0
+    - padding-block-end (range): Bottom padding, 0–100px. Default: 0
+    - padding-inline-start (range): Left padding, 0–100px. Default: 0
+    - padding-inline-end (range): Right padding, 0–100px. Default: 0
+
+  Notes:
+    - Desktop breakpoint is 750px (Horizon convention).
+    - Desktop/mobile visibility is handled via CSS classes, not Tailwind utilities.
+    - Uses size-style, spacing-style, and border-override snippets for layout.
+{% enddoc %}
+
+{% liquid
+  assign block_settings = block.settings
+  assign image_desktop = block_settings.image
+  assign image_mobile = block_settings.image_mobile
+  assign image_ratio_mobile = block_settings.image_ratio_mobile
+  assign ratio = 1
+
+  case block_settings.image_ratio
+    when 'landscape'
+      assign ratio = '16 / 9'
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'adapt'
+      assign ratio = block_settings.image.aspect_ratio
+  endcase
+
+  if ratio == 0 or ratio == null
+    assign ratio = 1
+  endif
+
+  assign ratio_mobile = 1
+  if image_ratio_mobile != blank
+    case image_ratio_mobile
+      when 'landscape'
+        assign ratio_mobile = '16 / 9'
+      when 'portrait'
+        assign ratio_mobile = '4 / 5'
+      when 'adapt'
+        assign ratio_mobile = image_mobile.aspect_ratio
+    endcase
+  endif
+
+  if ratio_mobile == 0 or ratio_mobile == null
+    assign ratio_mobile = 1
+  endif
+%}
+
+{% capture class %}
+  image-block image-block--{{ block.id }} image-block--height-{{ block_settings.height }} image-block--height-mobile-{{ block_settings.height_mobile }} spacing-style size-style
+{% endcapture %}
+
+{% capture style %}
+  --ratio: {{ ratio }};
+  --ratio-mobile: {{ ratio_mobile }};
+  --ci-mb-mobile: {{ block_settings.margin_bottom_mobile | default: 0 }}px;
+  --ci-mb-desktop: {{ block_settings.margin_bottom_desktop | default: 0 }}px;
+  {% render 'size-style', settings: block_settings %}
+  {% render 'spacing-style', settings: block_settings %}
+{% endcapture %}
+
+{% capture image_border_style %}
+  --ratio: {{ ratio }};
+  {% render 'border-override', settings: block_settings %}
+{% endcapture %}
+
+{% capture image_border_style_mobile %}
+  --ratio: {{ ratio_mobile }};
+  {% render 'border-override', settings: block_settings %}
+{% endcapture %}
+
+{% liquid
+  assign media_width_desktop = '100vw'
+  assign media_width_mobile = '100vw'
+  assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+  assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
+%}
+
+{% capture image %}
+  {%- if image_desktop -%}
+    {{
+      image_desktop
+      | image_url: width: 3840
+      | image_tag:
+        width: image_desktop.width,
+        widths: widths,
+        height: image_desktop.height,
+        class: 'image-block__image image-block__desktop border-style',
+        style: image_border_style,
+        sizes: sizes
+    }}
+  {%- else -%}
+    <div class="image-block__placeholder image-block__desktop border-style size-style" style="{{ image_border_style }}">
+      {{ 'detailed-apparel-1' | placeholder_svg_tag: 'hero__media' }}
+    </div>
+  {%- endif -%}
+{% endcapture %}
+
+{% capture image_mobile_element %}
+  {%- if image_mobile -%}
+    {{
+      image_mobile
+      | image_url: width: 3840
+      | image_tag:
+        width: image_mobile.width,
+        widths: widths,
+        height: image_mobile.height,
+        class: 'image-block__image image-block__mobile border-style',
+        style: image_border_style_mobile,
+        sizes: sizes
+    }}
+  {%- else -%}
+    <div class="image-block__placeholder image-block__mobile border-style size-style" style="{{ image_border_style_mobile }}">
+      {{ 'detailed-apparel-1' | placeholder_svg_tag: 'hero__media' }}
+    </div>
+  {%- endif -%}
+{% endcapture %}
+
+{% if block_settings.link == blank %}
+  <div
+    class="{{ class }}"
+    style="{{ style }}"
+    {{ block.shopify_attributes }}
+  >
+    {{ image }}
+    {{ image_mobile_element }}
+  </div>
+{% else %}
+  <a
+    href="{{ block_settings.link }}"
+    class="{{ class }}"
+    style="{{ style }}"
+    {{ block.shopify_attributes }}
+  >
+    {{ image }}
+    {{ image_mobile_element }}
+  </a>
+{% endif %}
+
+{% stylesheet %}
+  .image-block {
+    display: flex;
+    justify-content: var(--horizontal-alignment, inline-start);
+    margin-bottom: var(--ci-mb-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .image-block {
+      margin-bottom: var(--ci-mb-desktop);
+    }
+  }
+
+  .image-block__image {
+    object-fit: cover;
+  }
+
+  .image-block__placeholder {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Mobile-first: show mobile, hide desktop */
+  .image-block__desktop {
+    display: none;
+    aspect-ratio: var(--ratio);
+  }
+
+  .image-block__mobile {
+    display: block;
+    aspect-ratio: var(--ratio-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .image-block__desktop {
+      display: block;
+    }
+
+    .image-block__mobile {
+      display: none;
+    }
+
+    .image-block--height-fill .image-block__image {
+      height: 100%;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .image-block--height-mobile-fill .image-block__image {
+      height: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.custom_image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:settings.image_desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:settings.image_mobile"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_size"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "portrait",
+          "label": "t:options.portrait"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        },
+        {
+          "value": "landscape",
+          "label": "t:options.landscape"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width_desktop",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:settings.height",
+      "options": [
+        {
+          "value": "fit",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        }
+      ],
+      "default": "fit",
+      "visible_if": "{{ block.settings.image_ratio == 'adapt' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_size"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_mobile",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "portrait",
+          "label": "t:options.portrait"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        },
+        {
+          "value": "landscape",
+          "label": "t:options.landscape"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "t:settings.width_mobile",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "height_mobile",
+      "label": "t:settings.mobile_height",
+      "options": [
+        {
+          "value": "fit",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        }
+      ],
+      "default": "fit",
+      "visible_if": "{{ block.settings.image_ratio_mobile == 'adapt' or block.settings.image_ratio_mobile == 'inherit' and block.settings.image_ratio == 'adapt' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.margin"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_desktop",
+      "label": "t:settings.margin_bottom_desktop",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_mobile",
+      "label": "t:settings.margin_bottom_mobile",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.custom_image",
+      "category": "t:categories.basic"
+    }
+  ]
+}
+{% endschema %}
