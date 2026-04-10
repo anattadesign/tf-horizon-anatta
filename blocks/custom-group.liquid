@@ -18,6 +18,7 @@
     - flex_wrap_desktop (select): Whether items wrap. Options: nowrap, wrap. Default: "nowrap"
     - row_gap_desktop (number): Vertical gap in px. Default: 12
     - column_gap_desktop (number): Horizontal gap in px. Default: 12
+    - margin_bottom_desktop (number): Bottom margin in px. Default: 0
 
     Mobile layout (below 750px):
     - flex_direction_mobile (select): Flow direction. Default: "column"
@@ -26,6 +27,7 @@
     - flex_wrap_mobile (select): Whether items wrap. Default: "wrap"
     - row_gap_mobile (number): Vertical gap in px. Default: 8
     - column_gap_mobile (number): Horizontal gap in px. Default: 8
+    - margin_bottom_mobile (number): Bottom margin in px. Default: 0
 
     Size:
     - width / custom_width: Desktop width (fit-content, fill, or custom %). Default: "fill"
@@ -150,6 +152,12 @@
       "info": "t:info.spacing_value"
     },
     {
+      "type": "number",
+      "id": "margin_bottom_desktop",
+      "label": "t:settings.margin_bottom_desktop",
+      "default": 0
+    },
+    {
       "type": "header",
       "content": "t:content.mobile_styles"
     },
@@ -216,6 +224,12 @@
       "label": "t:settings.column_gap",
       "default": 8,
       "info": "t:info.spacing_value"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_mobile",
+      "label": "t:settings.margin_bottom_mobile",
+      "default": 0
     },
     {
       "type": "header",

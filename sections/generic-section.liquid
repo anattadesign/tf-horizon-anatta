@@ -5,23 +5,34 @@
     A flexible, full-width section container that wraps any theme blocks.
     Use this as the primary layout wrapper for page content. It provides
     independent padding and margin controls for desktop and mobile, a
-    configurable content max-width, and a color scheme for background theming.
+    configurable content max-width, and color pickers for background and text.
 
   Settings:
+    Layout:
     - content_max_width (select): Maximum width of the inner content container.
-        Options: full (no constraint), 768px, 1024px, 1280px, 1920px.
+        Options: full (no constraint), 768px, 1024px, 1280px, 1920px, custom.
         Default: "full"
-    - desktop_padding_top (number): Top padding on desktop, in pixels. Default: 64
-    - desktop_padding_bottom (number): Bottom padding on desktop, in pixels. Default: 64
-    - desktop_padding_left (number): Left padding on desktop, in pixels. Default: 32
-    - desktop_padding_right (number): Right padding on desktop, in pixels. Default: 32
-    - desktop_margin_bottom (number): Bottom margin on desktop, in pixels. Default: 0
-    - mobile_padding_top (number): Top padding on mobile, in pixels. Default: 32
-    - mobile_padding_bottom (number): Bottom padding on mobile, in pixels. Default: 32
-    - mobile_padding_left (number): Left padding on mobile, in pixels. Default: 16
-    - mobile_padding_right (number): Right padding on mobile, in pixels. Default: 16
-    - mobile_margin_bottom (number): Bottom margin on mobile, in pixels. Default: 0
-    - color_scheme (color_scheme): Background color scheme applied to the section. Default: "scheme-1"
+    - content_custom_max_width (number): Custom max-width in px. Visible when custom. Default: 1440
+
+    Desktop styles (750px and above):
+    - desktop_padding_top (number): Top padding in px. Default: 64
+    - desktop_padding_bottom (number): Bottom padding in px. Default: 64
+    - desktop_padding_left (number): Left padding in px. Default: 64
+    - desktop_padding_right (number): Right padding in px. Default: 64
+    - desktop_margin_bottom (number): Bottom margin in px. Default: 0
+
+    Mobile styles (below 750px):
+    - mobile_padding_top (number): Top padding in px. Default: 32
+    - mobile_padding_bottom (number): Bottom padding in px. Default: 32
+    - mobile_padding_left (number): Left padding in px. Default: 16
+    - mobile_padding_right (number): Right padding in px. Default: 16
+    - mobile_margin_bottom (number): Bottom margin in px. Default: 0
+
+    Appearance:
+    - background_color (color): Desktop background color.
+    - text_color (color): Desktop text color. Cascades to all child text blocks.
+    - background_color_mobile (color): Mobile background color. Falls back to desktop.
+    - text_color_mobile (color): Mobile text color. Falls back to desktop.
 
   Usage example:
     Add a "Generic Section" from the theme editor. Then drag any blocks
@@ -34,15 +45,13 @@
 
     To create a full-bleed background band:
       - Set content_max_width to "full"
-      - Choose a contrasting color_scheme
+      - Choose a contrasting background_color
       - Set horizontal padding to 0 and control inner blocks independently
 
   Notes:
     - Desktop styles apply at 750px and above (Horizon standard breakpoint).
     - Accepts any @theme blocks as children.
-    - The section renders a <section> element with the color scheme class
-      applied, so background and foreground colors are inherited from the
-      active scheme automatically.
+    - Background and text colors are applied directly via color pickers.
 {% endcomment %}
 
 {% liquid
@@ -58,6 +67,10 @@
   assign mobile_padding_left = section_settings.mobile_padding_left
   assign mobile_padding_right = section_settings.mobile_padding_right
   assign mobile_margin_bottom = section_settings.mobile_margin_bottom
+  assign background_color = section_settings.background_color
+  assign text_color = section_settings.text_color
+  assign background_color_mobile = section_settings.background_color_mobile
+  assign text_color_mobile = section_settings.text_color_mobile
 %}
 
 {% capture inline_styles %}
@@ -74,6 +87,22 @@
   {% if content_max_width == 'custom' %}
     --gs-custom-max-width: {{ section_settings.content_custom_max_width }}px;
   {% endif %}
+  {% if background_color_mobile != blank %}
+    --gs-bg-color: {{ background_color_mobile }};
+  {% elsif background_color != blank %}
+    --gs-bg-color: {{ background_color }};
+  {% endif %}
+  {% if text_color_mobile != blank %}
+    --gs-text-color: {{ text_color_mobile }};
+  {% elsif text_color != blank %}
+    --gs-text-color: {{ text_color }};
+  {% endif %}
+  {% if background_color != blank %}
+    --gs-bg-color-desktop: {{ background_color }};
+  {% endif %}
+  {% if text_color != blank %}
+    --gs-text-color-desktop: {{ text_color }};
+  {% endif %}
 {% endcapture %}
 
 {% stylesheet %}
@@ -85,6 +114,8 @@
     padding-left: var(--gs-pl-mobile);
     padding-right: var(--gs-pr-mobile);
     margin-bottom: var(--gs-mb-mobile);
+    background-color: var(--gs-bg-color, inherit);
+    color: var(--gs-text-color, inherit);
   }
 
   @media screen and (min-width: 750px) {
@@ -94,6 +125,8 @@
       padding-left: var(--gs-pl-desktop);
       padding-right: var(--gs-pr-desktop);
       margin-bottom: var(--gs-mb-desktop);
+      background-color: var(--gs-bg-color-desktop, var(--gs-bg-color, inherit));
+      color: var(--gs-text-color-desktop, var(--gs-text-color, inherit));
     }
   }
 
@@ -112,7 +145,7 @@
 {% endstylesheet %}
 
 <section
-  class="generic-section color-{{ section_settings.color_scheme }}"
+  class="generic-section"
   style="{{ inline_styles | strip_newlines }}"
 >
   <div class="generic-section__inner generic-section__inner--{{ content_max_width }}">
@@ -230,10 +263,27 @@
       "content": "t:content.appearance"
     },
     {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "info": "Applies to all text blocks within the section"
+    },
+    {
+      "type": "color",
+      "id": "background_color_mobile",
+      "label": "Background color (mobile)",
+      "info": "Falls back to desktop background color if empty"
+    },
+    {
+      "type": "color",
+      "id": "text_color_mobile",
+      "label": "Text color (mobile)",
+      "info": "Falls back to desktop text color if empty"
     }
   ],
   "blocks": [

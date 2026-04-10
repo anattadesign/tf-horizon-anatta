@@ -92,6 +92,14 @@
 
 {% capture inline_styles %}
   {% render 'typography-style', settings: s %}
+  {% if s.type_preset == 'custom' %}
+    {% if s.line_height != blank %}
+      --line-height: {{ s.line_height }};
+    {% endif %}
+    {% if s.letter_spacing != blank %}
+      --letter-spacing: {{ s.letter_spacing }}px;
+    {% endif %}
+  {% endif %}
   --ct-width-desktop: {{ text_width }};
   --ct-max-width-desktop: {{ max_width_desktop }};
   --ct-width-mobile: {{ s.width_mobile }};
@@ -136,8 +144,12 @@
       {% endif %}
       --ct-m-text-transform: {{ s.case_mobile }};
       --ct-m-text-wrap: {{ s.wrap_mobile | default: 'pretty' }};
-      --ct-m-line-height: var(--line-height--{{ type }}-{{ s.line_height_mobile }});
-      --ct-m-letter-spacing: var(--letter-spacing--{{ type }}-{{ s.letter_spacing_mobile }});
+      {% if s.line_height_mobile != blank %}
+        --ct-m-line-height: {{ s.line_height_mobile }};
+      {% endif %}
+      {% if s.letter_spacing_mobile != blank %}
+        --ct-m-letter-spacing: {{ s.letter_spacing_mobile }}px;
+      {% endif %}
     {% elsif mobile_preset == 'h1' %}
       --ct-m-font-size: var(--font-h1--size);
       --ct-m-font-family: var(--font-heading--family);

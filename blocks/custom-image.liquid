@@ -31,6 +31,10 @@
     - border_opacity (range): 0–100%. Visible when border is not none. Default: 100
     - border_radius (range): 0–100px. Default: 0
 
+    Margin:
+    - margin_bottom_desktop (number): Desktop bottom margin in px. Default: 0
+    - margin_bottom_mobile (number): Mobile bottom margin in px. Default: 0
+
     Padding:
     - padding-block-start (range): Top padding, 0–100px. Default: 0
     - padding-block-end (range): Bottom padding, 0–100px. Default: 0
@@ -87,6 +91,8 @@
 {% capture style %}
   --ratio: {{ ratio }};
   --ratio-mobile: {{ ratio_mobile }};
+  --ci-mb-mobile: {{ block_settings.margin_bottom_mobile | default: 0 }}px;
+  --ci-mb-desktop: {{ block_settings.margin_bottom_desktop | default: 0 }}px;
   {% render 'size-style', settings: block_settings %}
   {% render 'spacing-style', settings: block_settings %}
 {% endcapture %}
@@ -173,6 +179,13 @@
   .image-block {
     display: flex;
     justify-content: var(--horizontal-alignment, inline-start);
+    margin-bottom: var(--ci-mb-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .image-block {
+      margin-bottom: var(--ci-mb-desktop);
+    }
   }
 
   .image-block__image {
@@ -387,6 +400,22 @@
       ],
       "default": "fit",
       "visible_if": "{{ block.settings.image_ratio_mobile == 'adapt' or block.settings.image_ratio_mobile == 'inherit' and block.settings.image_ratio == 'adapt' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.margin"
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_desktop",
+      "label": "t:settings.margin_bottom_desktop",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_mobile",
+      "label": "t:settings.margin_bottom_mobile",
+      "default": 0
     },
     {
       "type": "header",

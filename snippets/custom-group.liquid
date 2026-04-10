@@ -28,6 +28,8 @@
   --cg-wrap-desktop: {{ settings.flex_wrap_desktop }};
   --cg-row-gap-desktop: {{ settings.row_gap_desktop }}px;
   --cg-col-gap-desktop: {{ settings.column_gap_desktop }}px;
+  --cg-mb-mobile: {{ settings.margin_bottom_mobile | default: 0 }}px;
+  --cg-mb-desktop: {{ settings.margin_bottom_desktop | default: 0 }}px;
 {% endcapture %}
 
 <div
@@ -86,6 +88,13 @@
 {% stylesheet %}
   .custom-group {
     position: relative;
+    margin-bottom: var(--cg-mb-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-group {
+      margin-bottom: var(--cg-mb-desktop);
+    }
   }
 
   .custom-group__link {

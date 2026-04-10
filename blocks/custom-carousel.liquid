@@ -10,10 +10,12 @@
     Desktop (750px and above):
     - columns (number): Slides visible at once. Default: 4
     - gap (range 0–100): Space between slides in px. Default: 16
+    - margin_bottom_desktop (number): Bottom margin in px. Default: 0
 
     Mobile (below 750px):
     - columns_mobile (number): Slides visible at once. Default: 1
     - gap_mobile (range 0–100): Space between slides in px. Default: 8
+    - margin_bottom_mobile (number): Bottom margin in px. Default: 0
 
     Advanced:
     - infinite (checkbox): Enable infinite loop. Default: false
@@ -48,6 +50,8 @@
   endif
 
   assign carousel_id = block.id
+  assign mb_mobile = s.margin_bottom_mobile | default: 0
+  assign mb_desktop = s.margin_bottom_desktop | default: 0
 
   capture swiper_settings
     echo '{'
@@ -75,6 +79,13 @@
   .custom-carousel {
     display: block;
     width: 100%;
+    margin-bottom: var(--cc-mb-mobile);
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-carousel {
+      margin-bottom: var(--cc-mb-desktop);
+    }
   }
 
   .custom-carousel .swiper {
@@ -112,6 +123,7 @@
 <carousel-component
   id="{{ carousel_id }}"
   class="custom-carousel {{ color_scheme_class }}"
+  style="--cc-mb-mobile: {{ mb_mobile }}px; --cc-mb-desktop: {{ mb_desktop }}px;"
   data-settings='{{ swiper_settings }}'
   {{ block.shopify_attributes }}
 >
@@ -173,6 +185,12 @@
       "default": 16
     },
     {
+      "type": "number",
+      "id": "margin_bottom_desktop",
+      "label": "t:settings.margin_bottom_desktop",
+      "default": 0
+    },
+    {
       "type": "header",
       "content": "t:content.mobile_styles"
     },
@@ -192,6 +210,12 @@
       "step": 1,
       "unit": "px",
       "default": 8
+    },
+    {
+      "type": "number",
+      "id": "margin_bottom_mobile",
+      "label": "t:settings.margin_bottom_mobile",
+      "default": 0
     },
     {
       "type": "header",

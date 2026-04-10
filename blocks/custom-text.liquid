@@ -29,8 +29,8 @@
     - font (select): Font family. Visible when custom.
     - weight (select): Font weight (100–900). Visible when custom.
     - font_size (select): Font size. Visible when custom.
-    - line_height (select): tight, normal, loose. Visible when custom.
-    - letter_spacing (select): tight, normal, loose. Visible when custom.
+    - line_height (number): Line height as unitless value (e.g. 1.2, 1.5). Visible when custom.
+    - letter_spacing (number): Letter spacing in px (e.g. 0, 1, 2). Visible when custom.
     - case (select): none, uppercase, lowercase, capitalize. Visible when custom.
     - wrap (select): pretty, balance, nowrap. Visible when custom.
     - margin_top (number): Top margin in px. Visible when custom.
@@ -42,8 +42,8 @@
     - font_mobile (select): Font family. Visible when custom.
     - weight_mobile (select): Font weight (100–900). Visible when custom.
     - font_size_mobile (select): Font size. Visible when custom.
-    - line_height_mobile (select): tight, normal, loose. Visible when custom.
-    - letter_spacing_mobile (select): tight, normal, loose. Visible when custom.
+    - line_height_mobile (number): Line height as unitless value (e.g. 1.2, 1.5). Visible when custom.
+    - letter_spacing_mobile (number): Letter spacing in px (e.g. 0, 1, 2). Visible when custom.
     - case_mobile (select): none, uppercase, lowercase, capitalize. Visible when custom.
     - wrap_mobile (select): pretty, balance, nowrap. Visible when custom.
     - margin_top_mobile (number): Top margin in px. Visible when custom.
@@ -245,27 +245,17 @@
       "visible_if": "{{ block.settings.type_preset == 'custom' }}"
     },
     {
-      "type": "select",
+      "type": "number",
       "id": "line_height",
       "label": "t:settings.line_height",
-      "options": [
-        { "value": "tight", "label": "t:options.tight" },
-        { "value": "normal", "label": "t:options.normal" },
-        { "value": "loose", "label": "t:options.loose" }
-      ],
-      "default": "normal",
+      "info": "Unitless value (e.g. 1.2, 1.5)",
       "visible_if": "{{ block.settings.type_preset == 'custom' }}"
     },
     {
-      "type": "select",
+      "type": "number",
       "id": "letter_spacing",
       "label": "t:settings.letter_spacing",
-      "options": [
-        { "value": "tight", "label": "t:options.tight" },
-        { "value": "normal", "label": "t:options.normal" },
-        { "value": "loose", "label": "t:options.loose" }
-      ],
-      "default": "normal",
+      "info": "Value in px (e.g. 0, 1, 2)",
       "visible_if": "{{ block.settings.type_preset == 'custom' }}"
     },
     {
@@ -396,27 +386,17 @@
       "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
     },
     {
-      "type": "select",
+      "type": "number",
       "id": "line_height_mobile",
       "label": "t:settings.line_height",
-      "options": [
-        { "value": "tight", "label": "t:options.tight" },
-        { "value": "normal", "label": "t:options.normal" },
-        { "value": "loose", "label": "t:options.loose" }
-      ],
-      "default": "normal",
+      "info": "Unitless value (e.g. 1.2, 1.5)",
       "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
     },
     {
-      "type": "select",
+      "type": "number",
       "id": "letter_spacing_mobile",
       "label": "t:settings.letter_spacing",
-      "options": [
-        { "value": "tight", "label": "t:options.tight" },
-        { "value": "normal", "label": "t:options.normal" },
-        { "value": "loose", "label": "t:options.loose" }
-      ],
-      "default": "normal",
+      "info": "Value in px (e.g. 0, 1, 2)",
       "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
     },
     {

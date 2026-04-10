@@ -1044,6 +1044,8 @@
     "make_details_sticky_desktop": "Sticky on desktop",
     "make_section_full_width": "Make section full width",
     "margin_bottom": "Margin bottom",
+    "margin_bottom_desktop": "Desktop margin bottom",
+    "margin_bottom_mobile": "Mobile margin bottom",
     "margin_top": "Margin top",
     "max_width": "Max width",
     // Section header for product card media settings
