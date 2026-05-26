@@ -14,13 +14,30 @@
     "custom_announcement_bar": {
       "type": "custom-announcement-bar",
       "settings": {
-        "left_text": "Your Shop Consultant is <strong><u>SHOP.COM</u></strong>",
-        "right_text": "Start Your SHOP.COM Business",
-        "background_color": "#141414",
-        "text_color": "#FFFFFF",
-        "padding_block_start": 5,
-        "padding_block_end": 5
-      }
+        "color_scheme": "scheme-7",
+        "speed": 5,
+        "button_border_radius": 24,
+        "padding_block": 10
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "text": "Holiday Sale: Buy 2 Get 1 FREE FOR LIFE when you subscribe.",
+            "button_text": "SHOP NOW"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "text": "Free shipping over $40"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2"
+      ]
     },
     "custom_header": {
       "type": "custom-header",

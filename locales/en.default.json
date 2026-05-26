@@ -31,11 +31,13 @@
     // This is the label for the header navigation menu when using screen readers, it will read "Primary navigation"
     "header_navigation_label": "Primary",
     "nested_product": "{{ product_title }} for {{ parent_title }}",
+    "next_slide": "Next slide",
     "new_window": "Opens in a new window.",
     "open_hotspot": "Open hotspot",
     "quantity": "Quantity",
     "pause_video": "Pause video",
     "play_model": "Play 3D model",
+    "previous_slide": "Previous slide",
     "play_video": "Play video",
     "loading_product_recommendations": "Loading product recommendations",
     "rating": "Rating of this product is {{ rating }} out of 5",

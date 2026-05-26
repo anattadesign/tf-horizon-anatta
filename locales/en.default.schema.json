@@ -116,6 +116,7 @@
     "mobile_size": "Mobile size",
     "mobile_width": "Mobile width",
     "padding": "Padding",
+    "padding_block": "Vertical padding",
     "padding_desktop": "Desktop padding",
     "paragraph": "Paragraph",
     // Footer component section header for legal policy links
@@ -472,7 +473,8 @@
     "video_section": "Video",
     "view_all_button": "View all",
     "pills": "Pills",
-    "comparison_slider": "Comparison slider"
+    "comparison_slider": "Comparison slider",
+    "custom_announcement_bar": "Custom announcement bar"
   },
   "options": {
     "3d_model": "3D model",
@@ -876,7 +878,10 @@
     "bottom_row": "Bottom row",
     "bottom_padding": "Bottom padding",
     "button": "Button",
+    "button_border_radius": "Button corner radius",
+    "button_text": "Button text",
     "button_text_case": "Text case",
+    "button_url": "Button link",
     "card_height": "Card height",
     "card_hover_effect": "Card hover effect",
     "card_image_height": "Product image height",
@@ -1198,6 +1203,8 @@
     "size": "Size",
     "skus": "SKUs",
     "size_mobile": "Mobile size",
+    "slide_text": "Text",
+    "slide_link": "Link",
     "slide_spacing": "Slide gap",
     "slide_width": "Slide width",
     "slideshow_fullwidth": "Full width slides",

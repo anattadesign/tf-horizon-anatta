@@ -1,0 +1,301 @@
+{% if section.blocks.size > 1 %}
+  <script
+    src="{{ 'announcement-bar.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
+
+{% liquid
+  assign autoplay = false
+  assign show_arrows = false
+  if section.blocks.size > 1
+    assign autoplay = true
+    assign show_arrows = true
+  endif
+%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<announcement-bar-component
+  class="custom-announcement-bar color-{{ section.settings.color_scheme }}"
+  style="--cab-padding-block: {{ section.settings.padding_block }}px; --cab-button-radius: {{ section.settings.button_border_radius }}px;"
+  {% if autoplay %}
+    autoplay="{{ section.settings.speed }}"
+    aria-live="polite"
+  {% endif %}
+>
+  {% if show_arrows %}
+    <button
+      class="custom-announcement-bar__arrow"
+      on:click="/previous"
+      aria-label="{{ 'accessibility.previous_slide' | t }}"
+    >
+      <img
+        src="{{ 'caretleft.svg' | asset_url }}"
+        alt=""
+        width="12"
+        height="12"
+        loading="eager"
+      >
+    </button>
+  {% endif %}
+
+  <div class="custom-announcement-bar__slides">
+    {% for block in section.blocks %}
+      <div
+        class="custom-announcement-bar__slide"
+        ref="slides[]"
+        {% if forloop.first %}aria-hidden="false"{% else %}aria-hidden="true"{% endif %}
+        {{ block.shopify_attributes }}
+      >
+        {% liquid
+          assign has_button = false
+          if block.settings.button_text != blank
+            assign has_button = true
+          endif
+        %}
+
+        <div class="custom-announcement-bar__slide-content">
+          {% if block.settings.text != blank %}
+            <span class="custom-announcement-bar__text">
+              {{- block.settings.text | escape -}}
+            </span>
+          {% endif %}
+
+          {% if has_button %}
+            <a
+              href="{{ block.settings.button_url | default: '#' }}"
+              class="custom-announcement-bar__button"
+            >
+              {{- block.settings.button_text | escape -}}
+            </a>
+          {% endif %}
+        </div>
+
+        {% if has_button == false and block.settings.link != blank %}
+          <a
+            href="{{ block.settings.link }}"
+            class="custom-announcement-bar__overlay-link"
+            aria-label="{{ block.settings.text | escape }}"
+          ></a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if show_arrows %}
+    <button
+      class="custom-announcement-bar__arrow"
+      on:click="/next"
+      aria-label="{{ 'accessibility.next_slide' | t }}"
+    >
+      <img
+        src="{{ 'caretright.svg' | asset_url }}"
+        alt=""
+        width="12"
+        height="12"
+        loading="eager"
+      >
+    </button>
+  {% endif %}
+</announcement-bar-component>
+
+{% stylesheet %}
+  .custom-announcement-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+    padding-block: var(--cab-padding-block, 10px);
+    padding-inline: 16px;
+  }
+
+  .custom-announcement-bar__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+  }
+
+  .custom-announcement-bar__arrow img {
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+
+  .custom-announcement-bar__slides {
+    display: grid;
+    grid: [stack] auto / [stack] auto;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .custom-announcement-bar__slide {
+    grid-area: stack;
+    position: relative;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+
+    &[aria-hidden='true'] {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  .custom-announcement-bar__slide-content {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .custom-announcement-bar__text {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--color-foreground);
+  }
+
+  .custom-announcement-bar__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border-radius: var(--cab-button-radius, 24px);
+    padding: 4px 8px;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  .custom-announcement-bar__overlay-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  @media screen and (max-width: 749px) {
+    .custom-announcement-bar {
+      gap: 16px;
+      padding-block: 7px;
+    }
+
+    .custom-announcement-bar__text {
+      text-align: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.custom_announcement_bar",
+  "tag": "aside",
+  "class": "section-wrapper",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-7"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:settings.scroll_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "t:settings.button_border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "t:settings.padding_block",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 10,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "t:names.slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:settings.slide_text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:settings.slide_link"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:settings.button_text"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "t:settings.button_url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.custom_announcement_bar",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "text": "Holiday Sale: Buy 2 Get 1 FREE FOR LIFE when you subscribe.",
+            "button_text": "SHOP NOW"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "text": "Free shipping over $40"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
