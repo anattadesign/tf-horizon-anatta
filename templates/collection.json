@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
     "section": {
       "type": "section",
@@ -78,7 +78,7 @@
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
+        "gap": 8,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -94,8 +94,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 24,
+        "padding-block-end": 40
       }
     },
     "main": {
@@ -106,13 +106,13 @@
           "static": true,
           "settings": {
             "enable_filtering": true,
-            "filter_style": "horizontal",
+            "filter_style": "vertical",
             "filter_width": "centered",
-            "text_label_case": "default",
+            "text_label_case": "uppercase",
             "show_swatch_label": false,
             "show_filter_label": false,
             "enable_sorting": true,
-            "enable_grid_density": true,
+            "enable_grid_density": false,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "padding-block-start": 8,
@@ -120,7 +120,7 @@
             "padding-inline-start": 0,
             "padding-inline-end": 0,
             "facets_margin_bottom": 8,
-            "facets_margin_right": 20
+            "facets_margin_right": 0
           },
           "blocks": {}
         },
@@ -131,10 +131,10 @@
             "product_card_gap": 4,
             "inherit_color_scheme": true,
             "color_scheme": "",
-            "border": "none",
+            "border": "solid",
             "border_width": 1,
             "border_opacity": 100,
-            "border_radius": 0,
+            "border_radius": 16,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
@@ -144,7 +144,7 @@
             "card-gallery": {
               "type": "_product-card-gallery",
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "square",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -153,6 +153,14 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "vendor_custom": {
+              "type": "custom-liquid",
+              "name": "Vendor",
+              "settings": {
+                "custom_liquid": "{% if closest.product.vendor != blank %}<p class=\"cf-product-vendor\">Sold by {{ closest.product.vendor }}</p>{% endif %}"
               },
               "blocks": {}
             },
@@ -174,10 +182,31 @@
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
-                "padding-block-start": 4,
+                "padding-block-start": 0,
                 "padding-block-end": 0,
-                "padding-inline-start": 0,
+                "padding-inline-start": 10,
                 "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "review_stars": {
+              "type": "review",
+              "name": "Review",
+              "settings": {
+                "stars_style": "shaded",
+                "show_number": true,
+                "rating_color": "primary",
+                "type_preset": "paragraph",
+                "width": "100%",
+                "alignment": "left"
+              },
+              "blocks": {}
+            },
+            "description_custom": {
+              "type": "custom-liquid",
+              "name": "Short description",
+              "settings": {
+                "custom_liquid": "{% if closest.product.description != blank %}<p class=\"cf-product-description\">{{ closest.product.description | strip_html | truncate: 60 }}</p>{% endif %}"
               },
               "blocks": {}
             },
@@ -203,23 +232,77 @@
               },
               "blocks": {}
             },
+            "cashback_custom": {
+              "type": "custom-liquid",
+              "name": "Cashback badge",
+              "settings": {
+                "custom_liquid": "<div class=\"cf-cashback\"><img src=\"{{ 'cashback-icon-18.svg' | asset_url }}\" width=\"12\" height=\"12\" alt=\"\" aria-hidden=\"true\">2% Cashback</div>"
+              },
+              "blocks": {}
+            },
             "swatches": {
               "type": "swatches",
               "name": "t:names.swatches",
               "settings": {
                 "product_swatches_alignment": "flex-start",
-                "product_swatches_padding_top": 4,
+                "product_swatches_alignment_mobile": "flex-start",
+                "hide_padding": false,
+                "product_swatches_padding_top": 0,
                 "product_swatches_padding_bottom": 0,
                 "product_swatches_padding_left": 0,
                 "product_swatches_padding_right": 0
-              }
+              },
+              "blocks": {}
+            },
+            "buy_buttons_plp": {
+              "type": "buy-buttons",
+              "name": "Add to cart",
+              "settings": {
+                "stacking": false,
+                "show_pickup_availability": true,
+                "gift_card_form": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "disabled": true,
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button-secondary"
+                  },
+                  "blocks": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "disabled": true,
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                }
+              },
+              "block_order": []
             }
           },
           "block_order": [
             "card-gallery",
+            "vendor_custom",
             "product_title_4nY4eT",
+            "review_stars",
+            "description_custom",
             "price_EzJzMm",
-            "swatches"
+            "cashback_custom",
+            "swatches",
+            "buy_buttons_plp"
           ]
         }
       },
@@ -227,6 +310,8 @@
         "layout_type": "grid",
         "product_card_size": "medium",
         "mobile_product_card_size": "small",
+        "enable_infinite_scroll": true,
+        "products_per_page": 24,
         "product_grid_width": "centered",
         "full_width_on_mobile": true,
         "columns_gap_horizontal": 16,
@@ -235,7 +320,7 @@
         "padding-inline-end": 0,
         "color_scheme": "scheme-1",
         "padding-block-start": 0,
-        "padding-block-end": 32
+        "padding-block-end": 48
       }
     }
   },
