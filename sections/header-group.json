@@ -42,18 +42,15 @@
     "custom_header": {
       "type": "custom-header",
       "settings": {
-        "search_placeholder": "Search products",
-        "subheader_menu": "main-menu",
-        "quiz_text": "Take Quiz",
-        "sign_in_text": "Sign in",
-        "cart_text": "Cart",
-        "cashback_text": "$6,073,506,282 awarded in cash! <u>Learn More</u>",
-        "cta_text": "Get Paid Daily.",
-        "color_scheme": "scheme-1",
+        "menu": "main-menu",
+        "color_scheme": "scheme-8",
+        "show_search": true,
+        "show_account": true,
         "enable_sticky": true,
-        "border_width": 1,
-        "padding_block_start": 12,
-        "padding_block_end": 12
+        "logo_width": 82,
+        "logo_width_mobile": 82,
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     }
   },

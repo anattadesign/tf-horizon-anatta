@@ -313,6 +313,14 @@
     "recipient_form_error": "There was an error with the form submission",
     "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} characters used"
   },
+  "sections": {
+    "custom_header": {
+      "open_menu": "Open navigation menu",
+      "close_menu": "Close navigation menu",
+      "navigation_label": "Main navigation",
+      "mobile_navigation_label": "Mobile navigation"
+    }
+  },
   "fields": {
     // Separates min and max values in price range filter
     "separator": "to"
