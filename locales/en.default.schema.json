@@ -484,7 +484,8 @@
     "ag1_card": "Card",
     "ag1_super_headline": "Super Headline",
     "ag1_stats_card": "Stats Card",
-    "ag1_panel": "Panel"
+    "ag1_panel": "Panel",
+    "ag1_clinical_study": "AG1 Clinical Study"
   },
   "options": {
     "3d_model": "3D model",
@@ -1290,7 +1291,20 @@
     "cs_slider_inner_color": "Slider inner color",
     "text_on_images": "Text on images",
     "x_position": "Horizontal position",
-    "y_position": "Vertical position"
+    "y_position": "Vertical position",
+    "heading_superscript": "Heading superscript",
+    "image_before_label": "Before label",
+    "image_after_label": "After label",
+    "callout_text": "Callout text",
+    "callout_bg_color": "Callout background",
+    "callout_text_color": "Callout text color",
+    "stat_number": "Stat number",
+    "stat_suffix": "Stat suffix",
+    "enable_animation": "Enable animation",
+    "button_label": "Button label",
+    "button_link": "Button link",
+    "image_before": "Before image",
+    "image_after": "After image"
   },
   "text_defaults": {
     "accordion_heading": "Accordion heading",
