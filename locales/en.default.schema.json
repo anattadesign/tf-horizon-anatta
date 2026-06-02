@@ -472,7 +472,19 @@
     "video_section": "Video",
     "view_all_button": "View all",
     "pills": "Pills",
-    "comparison_slider": "Comparison slider"
+    "comparison_slider": "Comparison slider",
+    "ag1_hero": "AG1 Hero",
+    "ag1_comparison_chart": "AG1 Comparison Chart",
+    "ag1_card_carousel": "AG1 Card Carousel",
+    "ag1_image_content": "AG1 Image Content",
+    "ag1_flavor_accordion": "AG1 Flavor Accordion",
+    "ag1_rating": "Rating",
+    "ag1_trust_badge": "Trust Badge",
+    "ag1_chart_row": "Chart Row",
+    "ag1_card": "Card",
+    "ag1_super_headline": "Super Headline",
+    "ag1_stats_card": "Stats Card",
+    "ag1_panel": "Panel"
   },
   "options": {
     "3d_model": "3D model",

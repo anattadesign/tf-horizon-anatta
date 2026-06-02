@@ -1,0 +1,376 @@
+{
+  "sections": {
+    "ag1-hero": {
+      "type": "ag1-hero",
+      "settings": {
+        "section_height": "80vh",
+        "overlay_opacity": 40,
+        "color_scheme": "scheme-6",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "rating": {
+          "type": "rating",
+          "settings": {
+            "stars": 5,
+            "text": "10,000+ verified 5-star reviews"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "The #1 Daily Health Drink"
+          }
+        },
+        "subtitle": {
+          "type": "subtitle",
+          "settings": {
+            "text": "AG1 is a daily Foundational Nutrition supplement that supports whole body health."
+          }
+        },
+        "button-1": {
+          "type": "button",
+          "settings": {
+            "label": "Shop AG1",
+            "style_class": "button"
+          }
+        },
+        "button-2": {
+          "type": "button",
+          "settings": {
+            "label": "See Our Studies",
+            "style_class": "button--secondary"
+          }
+        },
+        "trust-1": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "Backed by 6 clinical trials"
+          }
+        },
+        "trust-2": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "NSF Certified for Sport®"
+          }
+        },
+        "trust-3": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "Trusted by leading scientists"
+          }
+        }
+      },
+      "block_order": ["rating", "heading", "subtitle", "button-1", "button-2", "trust-1", "trust-2", "trust-3"]
+    },
+    "ag1-comparison": {
+      "type": "ag1-comparison-chart",
+      "settings": {
+        "heading": "AG1 replaces your daily",
+        "column_1_label": "AG1",
+        "column_2_label": "Multivitamins",
+        "column_3_label": "Probiotics",
+        "column_4_label": "Greens",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "row-1": {
+          "type": "row",
+          "settings": {
+            "label": "Vitamins",
+            "ag1": true,
+            "multivitamins": true,
+            "probiotics": false,
+            "greens": false
+          }
+        },
+        "row-2": {
+          "type": "row",
+          "settings": {
+            "label": "Minerals",
+            "ag1": true,
+            "multivitamins": true,
+            "probiotics": false,
+            "greens": false
+          }
+        },
+        "row-3": {
+          "type": "row",
+          "settings": {
+            "label": "Prebiotics",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": true,
+            "greens": false
+          }
+        },
+        "row-4": {
+          "type": "row",
+          "settings": {
+            "label": "Probiotics",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": true,
+            "greens": false
+          }
+        },
+        "row-5": {
+          "type": "row",
+          "settings": {
+            "label": "Greens & Superfoods",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": true
+          }
+        },
+        "row-6": {
+          "type": "row",
+          "settings": {
+            "label": "Antioxidants",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": true
+          }
+        },
+        "row-7": {
+          "type": "row",
+          "settings": {
+            "label": "Digestive Enzymes",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": false
+          }
+        }
+      },
+      "block_order": ["row-1", "row-2", "row-3", "row-4", "row-5", "row-6", "row-7"]
+    },
+    "ag1-benefits": {
+      "type": "ag1-card-carousel",
+      "settings": {
+        "heading": "What makes AG1 so powerful",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "card-1": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/dafbc60d8c8011c7422e205dc4a9711cd5f1ea1f-333x500-4dbdb90f503c.png",
+            "heading": "Gut Health"
+          }
+        },
+        "card-2": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/27ecf7745182a559096225712939a75753cb317f-333x500-c97388694ee6.png",
+            "heading": "Energy Support"
+          }
+        },
+        "card-3": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/603f1ecce4c608ca49eaf9e32dc8b0b3c50191e1-333x500-ba7feea0c37f.png",
+            "heading": "Immune Function"
+          }
+        },
+        "card-4": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/58369b3ebdea4e6a4f8977056de0ce1e21570238-333x500-6ce65bdc9fb0.png",
+            "heading": "Healthy Aging"
+          }
+        }
+      },
+      "block_order": ["card-1", "card-2", "card-3", "card-4"]
+    },
+    "ag1-green": {
+      "type": "ag1-image-content",
+      "settings": {
+        "image": "shopify://shop_images/135a7412005b84674fe09fc548a76e2e289173bd-1626x1620-dd111b553226.png",
+        "complementary_image": "shopify://shop_images/5e91f079fe7ad0d3151902a1ac25d4216584009e-1466x978-89e5a02f51b4.png",
+        "image_position": "right",
+        "use_gradient": true,
+        "gradient_from": "#0C3D3D",
+        "gradient_to": "#1A5C5C",
+        "color_scheme": "scheme-7",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "super-1": {
+          "type": "super_headline",
+          "settings": {
+            "text": "WHAT'S INSIDE"
+          }
+        },
+        "heading-1": {
+          "type": "heading",
+          "settings": {
+            "text": "A daily dose of greens",
+            "font_size": "56"
+          }
+        },
+        "body-1": {
+          "type": "body_text",
+          "settings": {
+            "text": "<p>Power lights, fans, and everyday essentials.</p>"
+          }
+        },
+        "button-1": {
+          "type": "button",
+          "settings": {
+            "label": "Shop AG1",
+            "style_class": "button"
+          }
+        }
+      },
+      "block_order": ["super-1", "heading-1", "body-1", "button-1"]
+    },
+    "ag1-stone": {
+      "type": "ag1-image-content",
+      "settings": {
+        "image": "shopify://shop_images/7a3684233352ee964901165337f7fd4afaa40edf-5760x3240-711ab9add640.png",
+        "image_position": "left",
+        "use_gradient": false,
+        "color_scheme": "scheme-8",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "super-2": {
+          "type": "super_headline",
+          "settings": {
+            "text": "THE SCIENCE"
+          }
+        },
+        "heading-2": {
+          "type": "heading",
+          "settings": {
+            "text": "Backed by research",
+            "font_size": "56"
+          }
+        },
+        "stats-1": {
+          "type": "stats_card",
+          "settings": {
+            "label": "CLINICAL TRIALS",
+            "stat_value": "10x",
+            "stat_description": "more nutrient absorption than standard supplements",
+            "show_dots": true
+          }
+        },
+        "button-2": {
+          "type": "button",
+          "settings": {
+            "label": "See the research",
+            "style_class": "button"
+          }
+        }
+      },
+      "block_order": ["super-2", "heading-2", "stats-1", "button-2"]
+    },
+    "ag1-flavors": {
+      "type": "ag1-flavor-accordion",
+      "settings": {
+        "heading": "Explore the flavors",
+        "section_height": 720,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "panel-1": {
+          "type": "panel",
+          "settings": {
+            "label": "Original",
+            "heading": "Original",
+            "body": "The one that started it all. A refreshing, subtly sweet flavor.",
+            "button_label": "Shop Original"
+          }
+        },
+        "panel-2": {
+          "type": "panel",
+          "settings": {
+            "label": "Berry",
+            "heading": "Berry",
+            "body": "A delicious berry blend with a smooth finish.",
+            "button_label": "Shop Berry"
+          }
+        },
+        "panel-3": {
+          "type": "panel",
+          "settings": {
+            "label": "Citrus",
+            "heading": "Citrus",
+            "body": "Bright and zesty citrus flavor to start your day.",
+            "button_label": "Shop Citrus"
+          }
+        }
+      },
+      "block_order": ["panel-1", "panel-2", "panel-3"]
+    },
+    "ag1-ingredients": {
+      "type": "ag1-card-carousel",
+      "settings": {
+        "heading": "Key ingredients",
+        "color_scheme": "scheme-7",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "ingredient-1": {
+          "type": "card",
+          "settings": {
+            "label": "SUPERFOOD",
+            "heading": "Spirulina"
+          }
+        },
+        "ingredient-2": {
+          "type": "card",
+          "settings": {
+            "label": "PROBIOTIC",
+            "heading": "Lactobacillus"
+          }
+        },
+        "ingredient-3": {
+          "type": "card",
+          "settings": {
+            "label": "ADAPTOGEN",
+            "heading": "Ashwagandha"
+          }
+        },
+        "ingredient-4": {
+          "type": "card",
+          "settings": {
+            "label": "MUSHROOM",
+            "heading": "Reishi"
+          }
+        },
+        "ingredient-5": {
+          "type": "card",
+          "settings": {
+            "label": "VITAMIN",
+            "heading": "Vitamin D3"
+          }
+        }
+      },
+      "block_order": ["ingredient-1", "ingredient-2", "ingredient-3", "ingredient-4", "ingredient-5"]
+    }
+  },
+  "order": [
+    "ag1-hero",
+    "ag1-comparison",
+    "ag1-benefits",
+    "ag1-green",
+    "ag1-stone",
+    "ag1-flavors",
+    "ag1-ingredients"
+  ]
+}

@@ -1,0 +1,353 @@
+{%- liquid
+  assign heading = section.settings.heading
+  assign footnote = section.settings.footnote
+-%}
+
+{%- capture check_icon -%}
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#46DE46"/><path d="M7 12l4 4 6-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+{%- endcapture -%}
+
+{%- capture empty_icon -%}
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" stroke="#CCCCCC" stroke-width="2"/></svg>
+{%- endcapture -%}
+
+<div
+  class="ag1-comparison-chart color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding-block-start }}px;
+    --section-padding-bottom: {{ section.settings.padding-block-end }}px;
+  "
+>
+  <div class="ag1-comparison-chart__container">
+    {%- if heading != blank -%}
+      <h2 class="ag1-comparison-chart__heading">{{ heading }}</h2>
+    {%- endif -%}
+
+    <div class="ag1-comparison-chart__table-wrapper">
+      <table class="ag1-comparison-chart__table" aria-label="{{ heading | escape }}">
+        <thead>
+          <tr>
+            <th scope="col" class="ag1-comparison-chart__th ag1-comparison-chart__th--label">
+              <span class="visually-hidden">Category</span>
+            </th>
+            <th scope="col" class="ag1-comparison-chart__th ag1-comparison-chart__th--highlight">{{ section.settings.column_1_label }}</th>
+            <th scope="col" class="ag1-comparison-chart__th">{{ section.settings.column_2_label }}</th>
+            <th scope="col" class="ag1-comparison-chart__th">{{ section.settings.column_3_label }}</th>
+            <th scope="col" class="ag1-comparison-chart__th">{{ section.settings.column_4_label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'row' -%}
+              <tr class="ag1-comparison-chart__row" {{ block.shopify_attributes }}>
+                <td class="ag1-comparison-chart__td ag1-comparison-chart__td--label">{{ block.settings.label }}</td>
+                <td class="ag1-comparison-chart__td ag1-comparison-chart__td--highlight">
+                  {%- if block.settings.ag1 -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Included">{{ check_icon }}</span>
+                  {%- else -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Not included">{{ empty_icon }}</span>
+                  {%- endif -%}
+                </td>
+                <td class="ag1-comparison-chart__td">
+                  {%- if block.settings.multivitamins -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Included">{{ check_icon }}</span>
+                  {%- else -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Not included">{{ empty_icon }}</span>
+                  {%- endif -%}
+                </td>
+                <td class="ag1-comparison-chart__td">
+                  {%- if block.settings.probiotics -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Included">{{ check_icon }}</span>
+                  {%- else -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Not included">{{ empty_icon }}</span>
+                  {%- endif -%}
+                </td>
+                <td class="ag1-comparison-chart__td">
+                  {%- if block.settings.greens -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Included">{{ check_icon }}</span>
+                  {%- else -%}
+                    <span class="ag1-comparison-chart__icon" aria-label="Not included">{{ empty_icon }}</span>
+                  {%- endif -%}
+                </td>
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    {%- if footnote != blank -%}
+      <p class="ag1-comparison-chart__footnote">{{ footnote }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ag1-comparison-chart {
+    padding-top: var(--section-padding-top, 80px);
+    padding-bottom: var(--section-padding-bottom, 80px);
+  }
+
+  .ag1-comparison-chart__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: 64px;
+  }
+
+  .ag1-comparison-chart__heading {
+    font-family: var(--font-heading--family);
+    font-size: 48px;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--color-foreground);
+    margin-block-end: 48px;
+  }
+
+  .ag1-comparison-chart__table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ag1-comparison-chart__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  .ag1-comparison-chart__th {
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-foreground);
+    padding: 16px 24px;
+    text-align: center;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .ag1-comparison-chart__th--label {
+    text-align: start;
+    width: 240px;
+  }
+
+  .ag1-comparison-chart__th--highlight {
+    color: #46DE46;
+    background-color: rgba(70, 222, 70, 0.05);
+  }
+
+  .ag1-comparison-chart__row {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ag1-comparison-chart__td {
+    padding: 20px 24px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .ag1-comparison-chart__td--label {
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-foreground);
+    text-align: start;
+    font-weight: 500;
+  }
+
+  .ag1-comparison-chart__td--highlight {
+    background-color: rgba(70, 222, 70, 0.05);
+  }
+
+  .ag1-comparison-chart__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ag1-comparison-chart__icon svg {
+    display: block;
+  }
+
+  .ag1-comparison-chart__footnote {
+    font-family: var(--font-body--family);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-foreground);
+    opacity: 0.6;
+    text-align: center;
+    margin-block-start: 24px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ag1-comparison-chart__container {
+      padding-inline: 24px;
+    }
+
+    .ag1-comparison-chart__heading {
+      font-size: 32px;
+      margin-block-end: 32px;
+    }
+
+    .ag1-comparison-chart__th {
+      font-size: 12px;
+      padding: 12px 16px;
+    }
+
+    .ag1-comparison-chart__td {
+      padding: 16px;
+    }
+
+    .ag1-comparison-chart__td--label {
+      font-size: 14px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.ag1_comparison_chart",
+  "tag": "section",
+  "class": "ag1-comparison-chart-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "AG1 replaces your daily"
+    },
+    {
+      "type": "header",
+      "content": "Column labels"
+    },
+    {
+      "type": "text",
+      "id": "column_1_label",
+      "label": "Column 1",
+      "default": "AG1"
+    },
+    {
+      "type": "text",
+      "id": "column_2_label",
+      "label": "Column 2",
+      "default": "Multivitamins"
+    },
+    {
+      "type": "text",
+      "id": "column_3_label",
+      "label": "Column 3",
+      "default": "Probiotics"
+    },
+    {
+      "type": "text",
+      "id": "column_4_label",
+      "label": "Column 4",
+      "default": "Greens"
+    },
+    {
+      "type": "textarea",
+      "id": "footnote",
+      "label": "Footnote"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 80,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "t:names.ag1_chart_row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Category",
+          "default": "Row label"
+        },
+        {
+          "type": "checkbox",
+          "id": "ag1",
+          "label": "AG1",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "multivitamins",
+          "label": "Multivitamins",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "probiotics",
+          "label": "Probiotics",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "greens",
+          "label": "Greens",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.ag1_comparison_chart",
+      "blocks": [
+        {
+          "type": "row",
+          "settings": { "label": "Vitamins", "ag1": true, "multivitamins": true, "probiotics": false, "greens": false }
+        },
+        {
+          "type": "row",
+          "settings": { "label": "Minerals", "ag1": true, "multivitamins": true, "probiotics": false, "greens": false }
+        },
+        {
+          "type": "row",
+          "settings": { "label": "Prebiotics", "ag1": true, "multivitamins": false, "probiotics": true, "greens": false }
+        },
+        {
+          "type": "row",
+          "settings": { "label": "Probiotics", "ag1": true, "multivitamins": false, "probiotics": true, "greens": false }
+        },
+        {
+          "type": "row",
+          "settings": { "label": "Greens & Superfoods", "ag1": true, "multivitamins": false, "probiotics": false, "greens": true }
+        },
+        {
+          "type": "row",
+          "settings": { "label": "Antioxidants", "ag1": true, "multivitamins": false, "probiotics": false, "greens": true }
+        },
+        {
+          "type": "row",
+          "settings": { "label": "Digestive Enzymes", "ag1": true, "multivitamins": false, "probiotics": false, "greens": false }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
