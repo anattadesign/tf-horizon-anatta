@@ -34,7 +34,12 @@
 
   <div class="ag1-hero__container">
     <div class="ag1-hero__content">
+      {%- assign buttons_group_open = false -%}
       {%- for block in section.blocks -%}
+        {%- if block.type != 'button' and buttons_group_open -%}
+          </div>
+          {%- assign buttons_group_open = false -%}
+        {%- endif -%}
         {%- case block.type -%}
           {%- when 'rating' -%}
             <div class="ag1-hero__rating" {{ block.shopify_attributes }}>
@@ -62,6 +67,10 @@
 
           {%- when 'button' -%}
             {%- if block.settings.label != blank -%}
+              {%- unless buttons_group_open -%}
+                <div class="ag1-hero__buttons">
+                {%- assign buttons_group_open = true -%}
+              {%- endunless -%}
               <div class="ag1-hero__button-wrapper" {{ block.shopify_attributes }}>
                 <a
                   {% if block.settings.url != blank %}href="{{ block.settings.url }}"{% else %}role="link" aria-disabled="true"{% endif %}
@@ -73,10 +82,11 @@
             {%- endif -%}
 
           {%- when 'trust_badge' -%}
-            {%- comment -%}Trust badges are collected and rendered in the bottom bar below{%- endcomment -%}
+            {%- comment -%}Trust badges are rendered in the bottom bar below{%- endcomment -%}
 
         {%- endcase -%}
       {%- endfor -%}
+      {%- if buttons_group_open -%}</div>{%- endif -%}
     </div>
 
     <div class="ag1-hero__trust-bar">
@@ -206,8 +216,17 @@
     margin-block-start: 24px;
   }
 
+  .ag1-hero__buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-block-start: 24px;
+  }
+
   .ag1-hero__button-wrapper {
-    margin-block-start: 16px;
     display: inline-flex;
   }
 
