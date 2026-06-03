@@ -1,0 +1,914 @@
+{
+  "sections": {
+    "ag1-hero-1": {
+      "type": "ag1-hero",
+      "settings": {
+        "overlay_opacity": 40,
+        "section_height": "100vh",
+        "color_scheme": "scheme-6",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "rating_1": {
+          "type": "rating",
+          "settings": {
+            "stars": 5,
+            "text": "10,000+ verified 5-star reviews"
+          }
+        },
+        "heading_1": {
+          "type": "heading",
+          "settings": {
+            "text": "The #1 Daily Health Drink"
+          }
+        },
+        "subtitle_1": {
+          "type": "subtitle",
+          "settings": {
+            "text": "AG1 is a daily foundational nutrition supplement that supports whole body health with one simple scoop."
+          }
+        },
+        "button_primary": {
+          "type": "button",
+          "settings": {
+            "label": "Shop AG1",
+            "style_class": "button"
+          }
+        },
+        "button_secondary": {
+          "type": "button",
+          "settings": {
+            "label": "See Our Studies",
+            "style_class": "button--secondary"
+          }
+        },
+        "trust_1": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "Backed by 6 clinical trials"
+          }
+        },
+        "trust_2": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "NSF Certified for Sport®"
+          }
+        },
+        "trust_3": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "Trusted by leading scientists"
+          }
+        }
+      },
+      "block_order": [
+        "rating_1",
+        "heading_1",
+        "subtitle_1",
+        "button_primary",
+        "button_secondary",
+        "trust_1",
+        "trust_2",
+        "trust_3"
+      ]
+    },
+    "ag1-hero-2": {
+      "type": "ag1-hero",
+      "settings": {
+        "overlay_opacity": 60,
+        "section_height": "60vh",
+        "color_scheme": "scheme-5",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "heading_2": {
+          "type": "heading",
+          "settings": {
+            "text": "Science-Backed Nutrition"
+          }
+        },
+        "button_single": {
+          "type": "button",
+          "settings": {
+            "label": "Explore AG1",
+            "style_class": "button"
+          }
+        },
+        "badge_1": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "Third-party tested"
+          }
+        },
+        "badge_2": {
+          "type": "trust_badge",
+          "settings": {
+            "text": "No artificial sweeteners"
+          }
+        }
+      },
+      "block_order": [
+        "heading_2",
+        "button_single",
+        "badge_1",
+        "badge_2"
+      ]
+    },
+    "ag1-card-carousel-1": {
+      "type": "ag1-card-carousel",
+      "settings": {
+        "heading": "What makes AG1 so powerful",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "label": "VITAMINS",
+            "heading": "Essential Vitamins",
+            "body": "A comprehensive blend of vitamins your body needs for daily performance."
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "label": "MINERALS",
+            "heading": "Key Minerals",
+            "body": "Bioavailable minerals sourced for optimal absorption and efficacy."
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "label": "PROBIOTICS",
+            "heading": "Gut Health",
+            "body": "7.2 billion CFUs of probiotics to support digestive wellness."
+          }
+        }
+      },
+      "block_order": ["card_1", "card_2", "card_3"]
+    },
+    "ag1-card-carousel-2": {
+      "type": "ag1-card-carousel",
+      "settings": {
+        "heading": "Our ingredients",
+        "button_label_1": "Shop Now",
+        "button_label_2": "Learn More",
+        "color_scheme": "scheme-2",
+        "padding-block-start": 60,
+        "padding-block-end": 60
+      },
+      "blocks": {
+        "card_a": {
+          "type": "card",
+          "settings": {
+            "label": "SUPERFOODS",
+            "heading": "Superfood Complex",
+            "body": "Nutrient-dense superfoods from around the world."
+          }
+        },
+        "card_b": {
+          "type": "card",
+          "settings": {
+            "label": "ADAPTOGENS",
+            "heading": "Adaptogenic Herbs",
+            "body": "Ashwagandha, rhodiola, and more for stress support."
+          }
+        },
+        "card_c": {
+          "type": "card",
+          "settings": {
+            "label": "ANTIOXIDANTS",
+            "heading": "Antioxidant Blend",
+            "body": "Powerful antioxidants to combat oxidative stress."
+          }
+        },
+        "card_d": {
+          "type": "card",
+          "settings": {
+            "label": "ENZYMES",
+            "heading": "Digestive Enzymes",
+            "body": "Enzymes to support nutrient absorption and digestion."
+          }
+        },
+        "card_e": {
+          "type": "card",
+          "settings": {
+            "label": "MUSHROOMS",
+            "heading": "Functional Mushrooms",
+            "body": "Reishi and shiitake for immune system support."
+          }
+        }
+      },
+      "block_order": ["card_a", "card_b", "card_c", "card_d", "card_e"]
+    },
+    "divider-1": {
+      "type": "divider",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "section_width": "page-width",
+        "thickness": 1,
+        "width_percent": 100,
+        "alignment_horizontal": "center",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "ag1-comparison-chart-1": {
+      "type": "ag1-comparison-chart",
+      "settings": {
+        "heading": "AG1 replaces your daily",
+        "column_1_label": "AG1",
+        "column_2_label": "Multivitamins",
+        "column_3_label": "Probiotics",
+        "column_4_label": "Greens",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "label": "Vitamins",
+            "ag1": true,
+            "multivitamins": true,
+            "probiotics": false,
+            "greens": false
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "label": "Minerals",
+            "ag1": true,
+            "multivitamins": true,
+            "probiotics": false,
+            "greens": false
+          }
+        },
+        "row_3": {
+          "type": "row",
+          "settings": {
+            "label": "Prebiotics",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": true,
+            "greens": false
+          }
+        },
+        "row_4": {
+          "type": "row",
+          "settings": {
+            "label": "Probiotics",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": true,
+            "greens": false
+          }
+        },
+        "row_5": {
+          "type": "row",
+          "settings": {
+            "label": "Greens & Superfoods",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": true
+          }
+        },
+        "row_6": {
+          "type": "row",
+          "settings": {
+            "label": "Antioxidants",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": true
+          }
+        },
+        "row_7": {
+          "type": "row",
+          "settings": {
+            "label": "Digestive Enzymes",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": false
+          }
+        }
+      },
+      "block_order": ["row_1", "row_2", "row_3", "row_4", "row_5", "row_6", "row_7"]
+    },
+    "ag1-comparison-chart-2": {
+      "type": "ag1-comparison-chart",
+      "settings": {
+        "heading": "How AG1 Next Gen compares",
+        "column_1_label": "AG1 Next Gen",
+        "column_2_label": "Standard Multi",
+        "column_3_label": "Probiotic Only",
+        "column_4_label": "Greens Powder",
+        "footnote": "Based on a comparison of typical product formulations and published research. Individual results may vary.",
+        "color_scheme": "scheme-2",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "row_a": {
+          "type": "row",
+          "settings": {
+            "label": "Whole Body Nutrition",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": false
+          }
+        },
+        "row_b": {
+          "type": "row",
+          "settings": {
+            "label": "Gut Health Support",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": true,
+            "greens": false
+          }
+        },
+        "row_c": {
+          "type": "row",
+          "settings": {
+            "label": "Immune Defense",
+            "ag1": true,
+            "multivitamins": true,
+            "probiotics": false,
+            "greens": false
+          }
+        },
+        "row_d": {
+          "type": "row",
+          "settings": {
+            "label": "Energy & Focus",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": true
+          }
+        },
+        "row_e": {
+          "type": "row",
+          "settings": {
+            "label": "Stress Adaptogens",
+            "ag1": true,
+            "multivitamins": false,
+            "probiotics": false,
+            "greens": false
+          }
+        }
+      },
+      "block_order": ["row_a", "row_b", "row_c", "row_d", "row_e"]
+    },
+    "divider-2": {
+      "type": "divider",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "section_width": "page-width",
+        "thickness": 3,
+        "width_percent": 50,
+        "alignment_horizontal": "center",
+        "padding-block-start": 20,
+        "padding-block-end": 20
+      }
+    },
+    "ag1-flavor-accordion-1": {
+      "type": "ag1-flavor-accordion",
+      "settings": {
+        "heading": "Explore the flavors",
+        "section_height": 720,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "panel_original": {
+          "type": "panel",
+          "settings": {
+            "label": "Original",
+            "heading": "Original",
+            "body": "The one that started it all. A refreshing, subtly sweet flavor.",
+            "button_label": "Shop Original"
+          }
+        },
+        "panel_berry": {
+          "type": "panel",
+          "settings": {
+            "label": "Berry",
+            "heading": "Berry",
+            "body": "A delicious berry blend with a smooth finish.",
+            "button_label": "Shop Berry"
+          }
+        },
+        "panel_citrus": {
+          "type": "panel",
+          "settings": {
+            "label": "Citrus",
+            "heading": "Citrus",
+            "body": "Bright and zesty citrus flavor to start your day.",
+            "button_label": "Shop Citrus"
+          }
+        }
+      },
+      "block_order": ["panel_original", "panel_berry", "panel_citrus"]
+    },
+    "ag1-flavor-accordion-2": {
+      "type": "ag1-flavor-accordion",
+      "settings": {
+        "heading": "Find your perfect flavor",
+        "section_height": 800,
+        "color_scheme": "scheme-5",
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      },
+      "blocks": {
+        "panel_a": {
+          "type": "panel",
+          "settings": {
+            "label": "Tropical",
+            "heading": "Tropical",
+            "body": "A sunny tropical blend with mango and pineapple notes.",
+            "button_label": "Shop Tropical"
+          }
+        },
+        "panel_b": {
+          "type": "panel",
+          "settings": {
+            "label": "Mint",
+            "heading": "Cool Mint",
+            "body": "A crisp, cool mint that refreshes and invigorates.",
+            "button_label": "Shop Mint"
+          }
+        },
+        "panel_c": {
+          "type": "panel",
+          "settings": {
+            "label": "Vanilla",
+            "heading": "Vanilla Bean",
+            "body": "Smooth and creamy vanilla with a hint of sweetness.",
+            "button_label": "Shop Vanilla"
+          }
+        },
+        "panel_d": {
+          "type": "panel",
+          "settings": {
+            "label": "Green Apple",
+            "heading": "Green Apple",
+            "body": "A crisp, tart green apple flavor that's light and refreshing.",
+            "button_label": "Shop Green Apple"
+          }
+        }
+      },
+      "block_order": ["panel_a", "panel_b", "panel_c", "panel_d"]
+    },
+    "ag1-clinical-study-1": {
+      "type": "ag1-clinical-study",
+      "settings": {
+        "label": "NUTRITIONAL GAPS",
+        "heading": "AG1 Next Gen is clinically shown to fill common nutrient gaps even in healthy eaters.",
+        "heading_superscript": "14",
+        "button_label": "Learn More",
+        "callout_text": "<p>In a 90-day clinical trial, participants who took AG1 daily showed significant improvements in key nutrient levels compared to baseline.</p>",
+        "stat_number": "97",
+        "stat_suffix": "%",
+        "enable_animation": true,
+        "color_scheme": "scheme-1",
+        "callout_bg_color": "#0C3D3D",
+        "callout_text_color": "#FFFFFF",
+        "divider_color": "#CDD2CF",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "ag1-clinical-study-2": {
+      "type": "ag1-clinical-study",
+      "settings": {
+        "label": "GUT HEALTH",
+        "heading": "Clinically proven to support gut health and healthy digestion.",
+        "heading_superscript": "9",
+        "button_label": "Read the Study",
+        "callout_text": "<p>Participants experienced measurable improvements in digestive comfort within the first 30 days of consistent AG1 use.</p>",
+        "stat_number": "89",
+        "stat_suffix": "%",
+        "enable_animation": true,
+        "color_scheme": "scheme-2",
+        "callout_bg_color": "#1A5C5C",
+        "callout_text_color": "#FFFFFF",
+        "divider_color": "#B8C0BA",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "ag1-image-content-1": {
+      "type": "ag1-image-content",
+      "settings": {
+        "image_position": "right",
+        "use_gradient": false,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "sh_1": {
+          "type": "super_headline",
+          "settings": {
+            "text": "BACKED BY SCIENCE"
+          }
+        },
+        "h_1": {
+          "type": "heading",
+          "settings": {
+            "text": "Comprehensive daily nutrition in one scoop",
+            "font_size": "56"
+          }
+        },
+        "body_1": {
+          "type": "body_text",
+          "settings": {
+            "text": "<p>AG1 is formulated with 75 high-quality vitamins, minerals, and whole-food sourced nutrients to create a comprehensive daily supplement.</p>"
+          }
+        },
+        "btn_1": {
+          "type": "button",
+          "settings": {
+            "label": "Learn more",
+            "style_class": "button"
+          }
+        }
+      },
+      "block_order": ["sh_1", "h_1", "body_1", "btn_1"]
+    },
+    "ag1-image-content-2": {
+      "type": "ag1-image-content",
+      "settings": {
+        "image_position": "left",
+        "use_gradient": true,
+        "gradient_from": "#0C3D3D",
+        "gradient_to": "#1A5C5C",
+        "color_scheme": "scheme-6",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "sh_2": {
+          "type": "super_headline",
+          "settings": {
+            "text": "THE AG1 DIFFERENCE"
+          }
+        },
+        "h_2": {
+          "type": "heading",
+          "settings": {
+            "text": "One daily habit for whole body health",
+            "font_size": "72"
+          }
+        },
+        "btn_2": {
+          "type": "button",
+          "settings": {
+            "label": "See Our Studies",
+            "style_class": "button--secondary"
+          }
+        }
+      },
+      "block_order": ["sh_2", "h_2", "btn_2"]
+    },
+    "ag1-image-content-3": {
+      "type": "ag1-image-content",
+      "settings": {
+        "image_position": "right",
+        "use_gradient": false,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "h_3": {
+          "type": "heading",
+          "settings": {
+            "text": "Trusted by millions worldwide",
+            "font_size": "40"
+          }
+        },
+        "stats_1": {
+          "type": "stats_card",
+          "settings": {
+            "label": "DAILY USERS",
+            "stat_value": "10M+",
+            "stat_description": "People worldwide trust AG1 as part of their daily routine.",
+            "show_dots": true
+          }
+        }
+      },
+      "block_order": ["h_3", "stats_1"]
+    },
+    "logo-section": {
+      "type": "logo",
+      "settings": {
+        "font": "heading",
+        "unit": "pixel",
+        "pixel_height": 48,
+        "custom_mobile_size": false,
+        "section_width": "page-width",
+        "alignment_horizontal": "center",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 32,
+        "padding-block-end": 32
+      }
+    },
+    "divider-3": {
+      "type": "divider",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "section_width": "page-width",
+        "thickness": 2,
+        "width_percent": 80,
+        "alignment_horizontal": "center",
+        "padding-block-start": 10,
+        "padding-block-end": 10
+      }
+    },
+    "rich-text-alt": {
+      "type": "section",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 24,
+        "section_width": "page-width",
+        "color_scheme": "scheme-3",
+        "padding-block-start": 60,
+        "padding-block-end": 60
+      },
+      "blocks": {
+        "rt_heading": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>Rich Text Variation</h2>",
+            "type_preset": "h2"
+          }
+        },
+        "rt_body": {
+          "type": "text",
+          "settings": {
+            "text": "<p>This is a section.liquid Rich text preset variation with scheme-3 color scheme, demonstrating alternative color combinations for content sections.</p>",
+            "type_preset": "rte"
+          }
+        },
+        "rt_button": {
+          "type": "button",
+          "settings": {
+            "label": "Get Started",
+            "style_class": "button"
+          }
+        }
+      },
+      "block_order": ["rt_heading", "rt_body", "rt_button"]
+    },
+    "faq-alt": {
+      "type": "section",
+      "settings": {
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "center",
+        "gap": 24,
+        "section_width": "page-width",
+        "color_scheme": "scheme-2",
+        "padding-block-start": 60,
+        "padding-block-end": 60
+      },
+      "blocks": {
+        "faq_title": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>Frequently Asked Questions</h2>",
+            "type_preset": "h2"
+          }
+        },
+        "faq_accordion": {
+          "type": "accordion",
+          "blocks": {
+            "q1": {
+              "type": "_accordion-row",
+              "settings": {
+                "title": "What is AG1?",
+                "text": "<p>AG1 is a comprehensive daily nutrition supplement that provides vitamins, minerals, probiotics, and superfoods in one convenient scoop.</p>"
+              }
+            },
+            "q2": {
+              "type": "_accordion-row",
+              "settings": {
+                "title": "How do I take AG1?",
+                "text": "<p>Simply mix one scoop with 8oz of cold water and enjoy first thing in the morning on an empty stomach for best results.</p>"
+              }
+            },
+            "q3": {
+              "type": "_accordion-row",
+              "settings": {
+                "title": "Is AG1 third-party tested?",
+                "text": "<p>Yes, AG1 is NSF Certified for Sport and undergoes rigorous third-party testing to ensure quality, purity, and potency.</p>"
+              }
+            }
+          },
+          "block_order": ["q1", "q2", "q3"]
+        }
+      },
+      "block_order": ["faq_title", "faq_accordion"]
+    },
+    "marquee-reverse": {
+      "type": "marquee",
+      "settings": {
+        "movement_direction": "reverse",
+        "color_scheme": "scheme-5",
+        "padding-block-start": 16,
+        "padding-block-end": 16,
+        "gap_between_elements": 48
+      },
+      "blocks": {
+        "m_text_1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Science-backed daily nutrition</p>",
+            "type_preset": "h5"
+          }
+        },
+        "m_text_2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>75 high-quality ingredients</p>",
+            "type_preset": "h5"
+          }
+        },
+        "m_text_3": {
+          "type": "text",
+          "settings": {
+            "text": "<p>NSF Certified for Sport</p>",
+            "type_preset": "h5"
+          }
+        },
+        "m_text_4": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Trusted by millions worldwide</p>",
+            "type_preset": "h5"
+          }
+        }
+      },
+      "block_order": ["m_text_1", "m_text_2", "m_text_3", "m_text_4"]
+    },
+    "custom-section-row": {
+      "type": "section",
+      "settings": {
+        "content_direction": "row",
+        "horizontal_alignment": "space-between",
+        "vertical_alignment": "center",
+        "gap": 32,
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 60,
+        "padding-block-end": 60
+      },
+      "blocks": {
+        "col_1": {
+          "type": "text",
+          "settings": {
+            "text": "<h3>Column One</h3>",
+            "type_preset": "h3"
+          }
+        },
+        "col_2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>This demonstrates section.liquid Custom section preset with a horizontal (row) content direction, showing how text blocks flow side by side.</p>",
+            "type_preset": "rte"
+          }
+        },
+        "col_3": {
+          "type": "button",
+          "settings": {
+            "label": "Action",
+            "style_class": "button"
+          }
+        }
+      },
+      "block_order": ["col_1", "col_2", "col_3"]
+    },
+    "editorial-wide": {
+      "type": "media-with-content",
+      "settings": {
+        "media_position": "right",
+        "media_width": "wide",
+        "section_width": "full-width",
+        "color_scheme": "scheme-3",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": {
+        "media": {
+          "type": "_media-without-appearance",
+          "static": true,
+          "settings": {}
+        },
+        "content": {
+          "type": "_content-without-appearance",
+          "static": true,
+          "blocks": {
+            "edt_heading": {
+              "type": "text",
+              "settings": {
+                "text": "<h2>Editorial Wide Media</h2>",
+                "type_preset": "h2"
+              }
+            },
+            "edt_body": {
+              "type": "text",
+              "settings": {
+                "text": "<p>This demonstrates the media-with-content section with a wide media width setting and full-width layout, scheme-3 color scheme.</p>",
+                "type_preset": "rte"
+              }
+            },
+            "edt_btn": {
+              "type": "button",
+              "settings": {
+                "label": "Discover More",
+                "style_class": "button"
+              }
+            }
+          },
+          "block_order": ["edt_heading", "edt_body", "edt_btn"]
+        }
+      }
+    },
+    "generic-section-alt": {
+      "type": "generic-section",
+      "settings": {
+        "content_max_width": "small"
+      },
+      "blocks": {
+        "gs_heading": {
+          "type": "text",
+          "settings": {
+            "text": "<h3>Generic Section — Small Width</h3>",
+            "type_preset": "h3"
+          }
+        },
+        "gs_body": {
+          "type": "text",
+          "settings": {
+            "text": "<p>The generic-section with small content max width, useful for narrow centered content layouts.</p>",
+            "type_preset": "rte"
+          }
+        }
+      },
+      "block_order": ["gs_heading", "gs_body"]
+    },
+    "divider-end": {
+      "type": "divider",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "section_width": "page-width",
+        "thickness": 1,
+        "width_percent": 100,
+        "alignment_horizontal": "center",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "ag1-hero-1",
+    "ag1-hero-2",
+    "ag1-card-carousel-1",
+    "ag1-card-carousel-2",
+    "divider-1",
+    "ag1-comparison-chart-1",
+    "ag1-comparison-chart-2",
+    "divider-2",
+    "ag1-flavor-accordion-1",
+    "ag1-flavor-accordion-2",
+    "ag1-clinical-study-1",
+    "ag1-clinical-study-2",
+    "ag1-image-content-1",
+    "ag1-image-content-2",
+    "ag1-image-content-3",
+    "logo-section",
+    "divider-3",
+    "rich-text-alt",
+    "faq-alt",
+    "marquee-reverse",
+    "custom-section-row",
+    "editorial-wide",
+    "generic-section-alt",
+    "divider-end"
+  ]
+}
