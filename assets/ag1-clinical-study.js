@@ -1,75 +1,113 @@
 class Ag1ClinicalStudy extends HTMLElement {
-  connectedCallback() {
-    this.observer = new IntersectionObserver(
-      (entries) => this.#handleIntersection(entries),
-      { threshold: 0.15 }
-    );
-    this.observer.observe(this);
+  #isVisible = false;
+  #afterBody = null;
+  #afterLabels = null;
 
+  connectedCallback() {
     this.statEl = this.querySelector('[data-stat-number]');
     if (this.statEl) {
-      this.statTarget = parseInt(this.statEl.dataset.statNumber, 10);
+      this.statTarget = parseInt(this.statEl.dataset.statNumber, 10) || 0;
       this.statAnimated = false;
     }
+
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          this.#isVisible = true;
+          this.classList.add('is-visible');
+          this.#animate();
+          this.#animateStat();
+          this.observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    this.observer.observe(this);
 
     this.#inlineSvg();
   }
 
   disconnectedCallback() {
-    if (this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
-    }
+    this.observer?.disconnect();
   }
 
   async #inlineSvg() {
     const container = this.querySelector('.ag1-clinical-study__svg-container');
     if (!container) return;
-
     const svgUrl = container.dataset.svgUrl;
     if (!svgUrl) return;
 
     try {
-      const response = await fetch(svgUrl);
-      const text = await response.text();
-      const parser = new DOMParser();
-      const svgDoc = parser.parseFromString(text, 'image/svg+xml');
-      const svg = svgDoc.querySelector('svg');
+      const res = await fetch(svgUrl);
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+      const svg = doc.querySelector('svg');
       if (!svg) return;
 
       svg.removeAttribute('width');
       svg.removeAttribute('height');
-      svg.style.cssText = '';
       svg.classList.add('ag1-clinical-study__svg');
 
-      // Tag the green (after) body for animation
-      for (const g of svg.querySelectorAll('g[mask]')) {
-        if (g.getAttribute('mask') === 'url(#__lottie_element_39)') {
-          g.classList.add('ag1-svg-after-body');
-        }
-      }
+      // SVG structure — root <g> has 4 direct children:
+      //   [0] green after-body   (mask=__lottie_element_39, translate ~503,305)
+      //   [1] after-side labels  (translate ~271,-1)
+      //   [2] gray before-body  (mask=__lottie_element_31, translate ~288,305)
+      //   [3] before-side labels (translate ~56,-1)
+      const rootG = svg.querySelector('g');
+      const children = rootG ? [...rootG.children].filter(c => c.tagName === 'g') : [];
 
-      // Tag right-side text groups for fade-in
-      for (const g of svg.querySelectorAll('g[transform]')) {
-        const t = g.getAttribute('transform') || '';
-        if (t.includes('521.5,34.75')) g.classList.add('ag1-svg-label-after');
-        if (t.includes('728.5,346.75') || t.includes('729,316.75') || t.includes('729,242.75')) {
-          g.classList.add('ag1-svg-label-after');
+      const afterBody = children[0] || svg.querySelector('g[mask="url(#__lottie_element_39)"]');
+      const afterLabels = children[1] || null;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!reducedMotion) {
+        // ⚠️ Set initial HIDDEN state via inline style BEFORE DOM insertion.
+        // This prevents the race condition where is-visible fires before SVG loads,
+        // causing the clip-path to jump straight to fully-visible with no transition.
+        if (afterBody) {
+          afterBody.style.clipPath = 'inset(100% 0 0 0)';
+          afterBody.style.transition = 'none';
+        }
+        if (afterLabels) {
+          afterLabels.style.opacity = '0';
+          afterLabels.style.transition = 'none';
         }
       }
 
       container.appendChild(svg);
+
+      // Resolve DOM references after insertion
+      const domRootG = container.querySelector('svg > g');
+      if (domRootG) {
+        const domChildren = [...domRootG.children].filter(c => c.tagName === 'g');
+        this.#afterBody = domChildren[0] || null;
+        this.#afterLabels = domChildren[1] || null;
+      }
+
+      if (!reducedMotion) {
+        // Force reflow so browser registers the initial hidden state
+        void container.offsetHeight;
+
+        // Re-apply transitions (element is still hidden)
+        if (this.#afterBody) {
+          this.#afterBody.style.transition = 'clip-path 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s';
+        }
+        if (this.#afterLabels) {
+          this.#afterLabels.style.transition = 'opacity 0.7s ease-out 1.5s';
+        }
+      }
+
+      // If observer already fired (section was already in viewport), animate now
+      if (this.#isVisible) {
+        requestAnimationFrame(() => this.#animate());
+      }
     } catch (_) {}
   }
 
-  #handleIntersection(entries) {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        this.classList.add('is-visible');
-        this.#animateStat();
-        this.observer.disconnect();
-      }
-    }
+  #animate() {
+    if (this.#afterBody) this.#afterBody.style.clipPath = 'inset(0 0 0 0)';
+    if (this.#afterLabels) this.#afterLabels.style.opacity = '1';
   }
 
   #animateStat() {
@@ -85,15 +123,13 @@ class Ag1ClinicalStudy extends HTMLElement {
     const duration = 1500;
     const start = performance.now();
 
-    const step = (now) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      this.statEl.textContent = Math.round(eased * this.statTarget);
-      if (progress < 1) requestAnimationFrame(step);
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      this.statEl.textContent = Math.round((1 - Math.pow(1 - t, 3)) * this.statTarget);
+      if (t < 1) requestAnimationFrame(tick);
     };
 
-    requestAnimationFrame(step);
+    requestAnimationFrame(tick);
   }
 }
 
